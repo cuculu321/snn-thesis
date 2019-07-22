@@ -112,6 +112,7 @@ for k in range(par.epoch):
 					x.t_rest = t + x.t_ref
 					x.P = par.Prest
 					for h in range(par.m):
+						#後シナプスの計算
 						for t1 in range(-2,par.t_back-1, -1):
 							if 0<=t+t1<par.T+1:
 								if train[h][t+t1] == 1:
@@ -120,7 +121,7 @@ for k in range(par.epoch):
 									 
 
 
-					
+						#前シナプスの計算
 						for t1 in range(2,par.t_fore+1, 1):
 							if 0<=t+t1<par.T+1:
 								if train[h][t+t1] == 1:
