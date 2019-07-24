@@ -14,20 +14,21 @@ from parameters import param as par
 def rl(t):
 	
 	if t>0:
-		return -par.A_plus*np.exp(-float(t)/par.tau_plus)
+		return -par.kNegativeReinforcement_*np.exp(-float(t)/par.kNegativeTau_)
 	if t<=0:
-		return par.A_minus*np.exp(float(t)/par.tau_minus)
+		return par.kPositiveReinforcement_*np.exp(float(t)/par.kPositiveTau_)
 
 
 #STDP weight update rule
 def update(w, del_w):
 	if del_w<0:
-		return w + par.sigma*del_w*(w-abs(par.w_min))*par.kScale_
+		return w + par.kSigma_*del_w*(w-abs(par.kMinWait_))*par.kScale_
 	elif del_w>0:
-		return w + par.sigma*del_w*(par.w_max-w)*par.kScale_
+		return w + par.kSigma_*del_w*(par.kWaitMax_
+		-w)*par.kScale_
 
 if __name__ == '__main__':
 	
-	print(rl(-20)*par.sigma)
+	print(rl(-20)*par.kSigma_)
 
 	

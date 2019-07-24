@@ -44,7 +44,7 @@ for i in range(par.kSecondLayerNuerons_):
 	for j in range(par.kFirstLayerNuerons_):
 		synapse[i][j] = random.uniform(0,0.4*par.kScale_)
 
-for k in range(par.epoch):
+for k in range(par.kEpoch_):
 	for i in range(3221,3222):
 		print(str(i) + "  " + str(k))
 		img = cv2.imread("mnist1/" + str(i) + ".png", 0)
@@ -131,8 +131,8 @@ for k in range(par.epoch):
 			for p in range(par.kFirstLayerNuerons_):
 				if sum(train[p])==0:
 					synapse[img_win][p] -= 0.06*par.kScale_
-					if(synapse[img_win][p]<par.w_min):
-						synapse[img_win][p] = par.w_min
+					if(synapse[img_win][p]<par.kMinWait_):
+						synapse[img_win][p] = par.kMinWait_
 		
 
 ttt = np.arange(0,len(pot_arrays[0]),1)

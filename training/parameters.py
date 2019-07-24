@@ -17,16 +17,16 @@ class param:
 	kMinPotential_ = -500 * kScale_
 	# Pth = 5
 	# D = 0.7
-	w_max = 1.5 * kScale_
-	w_min = -1.2 * kScale_
-	sigma = 0.1 #0.02
-	A_plus = 0.8  # time difference is positive i.e negative reinforcement
-	A_minus = 0.3 # 0.01 # time difference is negative i.e positive reinforcement 
-	tau_plus = 8
-	tau_minus = 5
+	kMaxWait_ = 1.5 * kScale_
+	kMinWait_ = -1.2 * kScale_
+	kSigma_ = 0.1 #0.02
+	kNegativeReinforcement_ = 0.8  # time difference is positive i.e negative reinforcement
+	kPositiveReinforcement_ = 0.3 # 0.01 # time difference is negative i.e positive reinforcement 
+	kNegativeTau_ = 8 #tau is 'τ:時定数'
+	kPositiveTau_ = 5
 	
-	epoch = 12
+	kEpoch_ = 12
 
-
-	fr_bits = 12
-	int_bits = 12
+#-- No use constant
+	#fr_bits = 12
+	#int_bits = 12
