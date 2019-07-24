@@ -24,8 +24,7 @@ def update(w, del_w):
 	if del_w<0:
 		return w + par.kSigma_*del_w*(w-abs(par.kMinWait_))*par.kScale_
 	elif del_w>0:
-		return w + par.kSigma_*del_w*(par.kWaitMax_
-		-w)*par.kScale_
+		return w + par.kSigma_*del_w*(par.kMaxWait_-w)*par.kScale_
 
 if __name__ == '__main__':
 	
