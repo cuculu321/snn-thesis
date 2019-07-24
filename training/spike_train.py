@@ -22,10 +22,10 @@ def encode(pot):
 	#initializing spike train
 	train = []
 
-	for l in range(par.pixel_x):
-		for m in range(par.pixel_x):
+	for l in range(par.kPixelX_):
+		for m in range(par.kPixelX_):
 		
-			temp = np.zeros([(par.T+1),])
+			temp = np.zeros([(par.kTime_+1),])
 
 			#calculating firing rate proportional to the membrane potential
 			freq = interp(pot[l][m], [-1.069,2.781], [1,20])
@@ -35,17 +35,17 @@ def encode(pot):
 				print(error)
 				
 			freq1 = math.ceil(600/freq)
-			print("freq : " + str(freq) + "  freq1 : " + str(freq1))
-
+			#print("freq  1 : " + str(l) + " m : " + str(m) + "   " + str(freq))
 
 			#generating spikes according to the firing rate
 			k = freq1
 			if(pot[l][m]>0):
-				while k<(par.T+1):
+				while k<(par.kTime_+1):
 					temp[k] = 1
 					k = k + freq1
 			train.append(temp)
-			# print sum(temp)
+			#print(sum(temp))
+			#print("temp  1 : " + str(l) + " m : " + str(m) + "   " + str(sum(temp)))
 	return train
 
 if __name__  == '__main__':

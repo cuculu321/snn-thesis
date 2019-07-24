@@ -22,20 +22,22 @@ import os
 def threshold(train):
 
 	tu = np.shape(train[0])[0]
+	print(tu)
 	thresh = 0
 	for i in range(tu):
 		simul_active = sum(train[:,i])
+		#print(train[:,i])
 		if simul_active>thresh:
 			thresh = simul_active
 
-	return (thresh/3)*par.scale
+	return (thresh/3)*par.kScale_
 
 
 if __name__ == '__main__':	
 
-	# img = cv2.imread("mnist1/" + str(1) + ".png", 0)
-	img = np.array(Image.open("mnist1/" + str(1) + ".png", 0))
-	print(img)
-	# pot = rf(img)
-	# train = np.array(encode(pot))
-	# print threshold(train)
+	img = cv2.imread("mnist1/" + str(1) + ".png", 0)
+	#img = np.array(Image.open("mnist1/" + str(1) + ".png", 0))
+	#print(img)
+	pot = rf(img)
+	train = np.array(encode(pot))
+	print(threshold(train))

@@ -11,7 +11,6 @@ import cv2
 from parameters import param as par
 
 def rf(inp):
-	print(len(inp[1]))
 	sca1 =  0.625
 	sca2 =  0.125
 	sca3 = -0.125
@@ -24,21 +23,20 @@ def rf(inp):
 	 	[	sca3 ,sca2 , sca1 ,sca2 ,sca3],
 	 	[	sca4 ,sca3 , sca2 ,sca3 ,sca4]]
 
-	pot = np.zeros([par.pixel_x,par.pixel_x])
+	pot = np.zeros([par.kPixelX_,par.kPixelX_])
 	ran = [-2,-1,0,1,2]
 	ox = 2
 	oy = 2
 
 	#Convolution
-	for i in range(par.pixel_x):
-		for j in range(par.pixel_x):
+	for i in range(par.kPixelX_):
+		for j in range(par.kPixelX_):
 			summ = 0
 			for m in ran:
 				for n in ran:
-					if (i+m)>=0 and (i+m)<=par.pixel_x-1 and (j+n)>=0 and (j+n)<=par.pixel_x-1:
+					if (i+m)>=0 and (i+m)<=par.kPixelX_-1 and (j+n)>=0 and (j+n)<=par.kPixelX_-1:
 						summ = summ + w[ox+m][oy+n]*inp[i+m][j+n]/255
 			pot[i][j] = summ
-	print(len(pot[1]))
 	return pot		
 
 if __name__ == '__main__':

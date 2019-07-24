@@ -22,30 +22,28 @@ from parameters import param as par
 from var_th import threshold
 import os
 
-np.set_printoptions(threshold=np.inf)
-
 #potentials of output neurons
 pot_arrays = []
-for i in range(par.n):
+for i in range(par.kSecondLayerNuerons_):
 	pot_arrays.append([])
 
 #time series 
-time  = np.arange(1, par.T+1, 1)
+time  = np.arange(1, par.kTime_+1, 1)
+
 layer2 = []
 
 # creating the hidden layer of neurons
-for i in range(par.n):
+for i in range(par.kSecondLayerNuerons_):
 	a = neuron()
 	layer2.append(a)
 
 #synapse matrix	initialization
-synapse = np.zeros((par.n,par.m))
-print(synapse)
+synapse = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
 
-for i in range(par.n):
-	for j in range(par.m):
-		synapse[i][j] = random.uniform(0,0.4*par.scale)
-		
+for i in range(par.kSecondLayerNuerons_):
+	for j in range(par.kFirstLayerNuerons_):
+		synapse[i][j] = random.uniform(0,0.4*par.kScale_)
+
 for k in range(par.epoch):
 	for i in range(3221,3222):
 		print(str(i) + "  " + str(k))
@@ -62,12 +60,12 @@ for k in range(par.epoch):
 		var_threshold = threshold(train)
 
 		# print var_threshold
-		# synapse_act = np.zeros((par.n,par.m))
+		# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
 		# var_threshold = 9
 		# print var_threshold
 		# var_D = (var_threshold*3)*0.07
 		
-		var_D = 0.15*par.scale
+		var_D = 0.15*par.kScale_
 
 		for x in layer2:
 			x.initial(var_threshold)
@@ -78,7 +76,7 @@ for k in range(par.epoch):
 		img_win = 100
 
 		active_pot = []
-		for index1 in range(par.n):
+		for index1 in range(par.kSecondLayerNuerons_):
 			active_pot.append(0)
 
 		#Leaky integrate and fire neuron dynamics
@@ -87,7 +85,8 @@ for k in range(par.epoch):
 				active = []	
 				if(x.t_rest<t):
 					x.P = x.P + np.dot(synapse[j], train[:,t])
-					if(x.P>par.Prest):
+					#print("synapse : " + str(synapse[j]))
+					if(x.P>par.kPrest_):
 						x.P -= var_D
 					active_pot[j] = x.P
 				
@@ -101,20 +100,20 @@ for k in range(par.epoch):
 					winner = np.argmax(active_pot)
 					img_win = winner
 					print("winner is " + str(winner))
-					for s in range(par.n):
+					for s in range(par.kSecondLayerNuerons_):
 						if(s!=winner):
-							layer2[s].P = par.Pmin
+							layer2[s].P = par.kMinPotential_
 
 			#Check for spikes and update weights				
 			for j,x in enumerate(layer2):
 				s = x.check()
 				if(s==1):
 					x.t_rest = t + x.t_ref
-					x.P = par.Prest
-					for h in range(par.m):
+					x.P = par.kPrest_
+					for h in range(par.kFirstLayerNuerons_):
 						#後シナプスの計算
-						for t1 in range(-2,par.t_back-1, -1):
-							if 0<=t+t1<par.T+1:
+						for t1 in range(-2,par.kTimeBack_-1, -1):
+							if 0 <= t + t1 < par.kTime_ + 1:
 								if train[h][t+t1] == 1:
 									# print "weight change by" + str(update(synapse[j][h], rl(t1)))
 									synapse[j][h] = update(synapse[j][h], rl(t1))
@@ -122,16 +121,16 @@ for k in range(par.epoch):
 
 
 						#前シナプスの計算
-						for t1 in range(2,par.t_fore+1, 1):
-							if 0<=t+t1<par.T+1:
+						for t1 in range(2,par.kTimeFore_+1, 1):
+							if 0<=t+t1<par.kTime_+1:
 								if train[h][t+t1] == 1:
 									# print "weight change by" + str(update(synapse[j][h], rl(t1)))
 									synapse[j][h] = update(synapse[j][h], rl(t1))
 									
 		if(img_win!=100):
-			for p in range(par.m):
+			for p in range(par.kFirstLayerNuerons_):
 				if sum(train[p])==0:
-					synapse[img_win][p] -= 0.06*par.scale
+					synapse[img_win][p] -= 0.06*par.kScale_
 					if(synapse[img_win][p]<par.w_min):
 						synapse[img_win][p] = par.w_min
 		
@@ -142,7 +141,7 @@ for i in range(len(ttt)):
 	Pth.append(layer2[0].Pth)
 
 #plotting 
-for i in range(par.n):
+for i in range(par.kSecondLayerNuerons_):
 	axes = plt.gca()
 	axes.set_ylim([-20,50])
 	plt.plot(ttt,Pth, 'r' )
@@ -150,5 +149,5 @@ for i in range(par.n):
 	plt.show()
 
 #Reconstructing weights to analyse training
-for i in range(par.n):
+for i in range(par.kSecondLayerNuerons_):
 	reconst_weights(synapse[i],i+1)
