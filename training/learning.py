@@ -38,11 +38,11 @@ for i in range(par.kSecondLayerNuerons_):
 	layer2.append(a)
 
 #synapse matrix	initialization
-synapse = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
+synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 for i in range(par.kSecondLayerNuerons_):
 	for j in range(par.kFirstLayerNuerons_):
-		synapse[i][j] = random.uniform(0,0.4 * par.kScale_)
+		synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 for epoch in range(par.kEpoch_):
 	for image_num in range(3221, 3222):
@@ -81,20 +81,20 @@ for epoch in range(par.kEpoch_):
 
 		#Leaky integrate and fire neuron dynamics
 		for time in time_array:
-			for second_position, second_layer_neuron in enumerate(layer2):
+			for second_layer_position, second_layer_neuron in enumerate(layer2):
 				active = []	
 				if(second_layer_neuron.t_rest < time):
 					second_layer_neuron.P = (second_layer_neuron.P 
 											+ np.dot(
-												synapse[second_position], spike_train[:, time]
+												synapse[second_layer_position], spike_train[:, time]
 											  )
 											)
-					#print("synapse : " + str(synapse[second_position]))
+					#print("synapse : " + str(synapse[second_layer_position]))
 					if(second_layer_neuron.P > par.kPrest_):
 						second_layer_neuron.P -= var_D
-					active_potential[second_position] = second_layer_neuron.P
+					active_potential[second_layer_position] = second_layer_neuron.P
 				
-				potential_lists[second_position].append(second_layer_neuron.P)
+				potential_lists[second_layer_position].append(second_layer_neuron.P)
 
 			# Lateral Inhibition
 			if(flag_spike==0):
@@ -109,7 +109,7 @@ for epoch in range(par.kEpoch_):
 							layer2[s].P = par.kMinPotential_
 
 			#Check for spikes and update weights				
-			for second_position, second_layer_neuron in enumerate(layer2):
+			for second_layer_position, second_layer_neuron in enumerate(layer2):
 				neuron_status = second_layer_neuron.check()
 				if(neuron_status == 1):
 					second_layer_neuron.t_rest = time + second_layer_neuron.t_ref
@@ -120,8 +120,8 @@ for epoch in range(par.kEpoch_):
 							if 0 <= time + back_time < par.kTime_ + 1:
 								if spike_train[first_layer_position][time + back_time] == 1:
 									# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-									synapse[second_position][first_layer_position] = update(
-										synapse[second_position][first_layer_position], rl(back_time)
+									synapse[second_layer_position][first_layer_position] = update(
+										synapse[second_layer_position][first_layer_position], rl(back_time)
 										)
 									 
 						#後シナプスの計算
@@ -129,8 +129,8 @@ for epoch in range(par.kEpoch_):
 							if 0 <= time + fore_time<par.kTime_+1:
 								if spike_train[first_layer_position][time + fore_time] == 1:
 									# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-									synapse[second_position][first_layer_position] = update(
-										synapse[second_position][first_layer_position], rl(fore_time)
+									synapse[second_layer_position][first_layer_position] = update(
+										synapse[second_layer_position][first_layer_position], rl(fore_time)
 										)
 									
 		if(img_win!=100):
@@ -147,13 +147,13 @@ for i in range(len(x_axis)):
 	layer2_Pth.append(layer2[0].Pth)
 
 #plotting 
-for second_position in range(par.kSecondLayerNuerons_):
+for second_layer_position in range(par.kSecondLayerNuerons_):
 	axes = plt.gca()
 	axes.set_ylim([-20,50])
-	plt.plot(x_axis,layer2_Pth, 'r' )
-	plt.plot(x_axis,potential_lists[second_position])
+	plt.plot(x_axis, layer2_Pth, 'r' )
+	plt.plot(x_axis, potential_lists[second_layer_position])
 	plt.show()
 
 #Reconstructing weights to analyse training
-for second_position in range(par.kSecondLayerNuerons_):
-	reconst_weights(synapse[second_position],second_position+1)
+for second_layer_position in range(par.kSecondLayerNuerons_):
+	reconst_weights(synapse[second_layer_position],second_layer_position+1)
