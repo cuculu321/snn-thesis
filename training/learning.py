@@ -156,4 +156,4 @@ for second_layer_position in range(par.kSecondLayerNuerons_):
 
 #Reconstructing weights to analyse training
 for second_layer_position in range(par.kSecondLayerNuerons_):
-	reconst_weights(synapse[second_layer_position],second_layer_position+1)
+	reconst_weights(synapse[second_layer_position], second_layer_position+1)
