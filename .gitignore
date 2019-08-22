@@ -1,2 +1,7 @@
 *.png
 *.pyc
+
+*.pdf
+.idea
+*.wav
+*.pyc
