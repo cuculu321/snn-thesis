@@ -15,7 +15,7 @@ from parameters import param as par
 def reconst_weights(weights, num):
 	weights = np.array(weights)
 	weights = np.reshape(weights, (par.kPixelX_,par.kPixelX_))
-	img = np.zeros((par.kPixelX_,par.kPixelX_))
+	img = np.zeros((par.kPixelX_, par.kPixelX_))
 	for i in range(par.kPixelX_):
 		for j in range(par.kPixelX_):
 			img[i][j] = int(interp(weights[i][j], [par.kMinWait_,par.kMaxWait_], [0,255]))	
@@ -26,7 +26,7 @@ def reconst_weights(weights, num):
 def reconst_rf(weights, num):
 	weights = np.array(weights)
 	weights = np.reshape(weights, (par.kPixelX_,par.kPixelX_))
-	img = np.zeros((par.kPixelX_,par.kPixelX_))
+	img = np.zeros((par.kPixelX_, par.kPixelX_))
 	for i in range(par.kPixelX_):
 		for j in range(par.kPixelX_):
 			img[i][j] = int(interp(weights[i][j], [-2,3.625], [0,255]))	
