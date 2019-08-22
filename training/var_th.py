@@ -22,15 +22,14 @@ import os
 def threshold(train):
 
 	tu = np.shape(train[0])[0]
-	print(tu)
 	thresh = 0
 	for i in range(tu):
-		simul_active = sum(train[:,i])
+		simul_active = sum(train[:, i])
 		#print(train[:,i])
-		if simul_active>thresh:
+		if simul_active > thresh:
 			thresh = simul_active
 
-	return (thresh/3)*par.kScale_
+	return (thresh / 3) * par.kScale_
 
 
 if __name__ == '__main__':	
