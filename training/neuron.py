@@ -14,19 +14,19 @@ class neuron:
 	def __init__(self):
 		self.t_ref = 30
 		self.t_rest = -1
-		self.P = par.Prest
+		self.P = par.kPrest_
 	def check(self):
 		if self.P>= self.Pth:
-			self.P = par.Prest
+			self.P = par.kPrest_
 			return 1	
-		elif self.P < par.Pmin:
-			self.P  = par.Prest
+		elif self.P < par.kMinPotential_:
+			self.P  = par.kPrest_
 			return 0
 		else:
 			return 0
 	def inhibit(self):
-		self.P  = par.Pmin
+		self.P  = par.kMinPotential_
 	def initial(self, th):
 		self.Pth = th
 		self.t_rest = -1
-		self.P = par.Prest
+		self.P = par.kPrest_

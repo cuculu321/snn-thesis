@@ -1,6 +1,6 @@
 ######################################################## README #############################################################
 
-# This file generates rate based spike train from the potential map.
+# This file generates rate based spike train from the potentialential map.
 
 ############################################################################################################################
 
@@ -17,35 +17,35 @@ from rl import update
 import math
 from parameters import param as par
 
-def encode(pot):
+def encode(potential):
 
 	#initializing spike train
 	train = []
 
-	for l in range(par.pixel_x):
-		for m in range(par.pixel_x):
+	for l in range(par.kPixelX_):
+		for m in range(par.kPixelX_):
 		
-			temp = np.zeros([(par.T+1),])
+			time_list = np.zeros([(par.kTime_+1), ])
 
 			#calculating firing rate proportional to the membrane potential
-			freq = interp(pot[l][m], [-1.069,2.781], [1,20])
-			
+			freq = interp(potential[l][m], [-1.069, 2.781], [1, 20])
+
 			# print freq
-			if freq<=0:
+			if freq <= 0:
 				print(error)
 				
-			freq1 = math.ceil(600/freq)
-			print("freq : " + str(freq) + "  freq1 : " + str(freq1))
-
+			freq1 = math.ceil(600 / freq)
+			#print("freq  1 : " + str(l) + " m : " + str(m) + "   " + str(freq))
 
 			#generating spikes according to the firing rate
-			k = freq1
-			if(pot[l][m]>0):
-				while k<(par.T+1):
-					temp[k] = 1
-					k = k + freq1
-			train.append(temp)
-			# print sum(temp)
+			spike_freq = freq1
+			if(potential[l][m] > 0):
+				while spike_freq < (par.kTime_ + 1):
+					time_list[spike_freq] = 1
+					spike_freq = spike_freq + freq1
+			train.append(time_list)
+			#print(sum(time_list))
+			#print("time_list  1 : " + str(l) + " m : " + str(m) + "   " + str(sum(time_list)))
 	return train
 
 if __name__  == '__main__':
@@ -53,14 +53,14 @@ if __name__  == '__main__':
 	# n = []
 	img = cv2.imread("mnist1/" + str(15) + ".png", 0)
 
-	pot = rf(img)
+	potential = rf(img)
 
-	# for i in pot:
+	# for i in potential:
 	# 	m.append(max(i))
 	# 	n.append(min(i))
 
 	# print max(m), min(n)
-	train = encode(pot)
+	train = encode(potential)
 	f = open('look_ups/train6.txt', 'w')
 	print(np.shape(train))
 
