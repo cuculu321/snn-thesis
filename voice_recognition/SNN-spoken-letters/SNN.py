@@ -77,6 +77,14 @@ def write_weights(network):
             i += 1
 
 def print_result(results):
+    """
+    結果の出力
+
+    Parameters
+    ----------
+    results : list[int]
+        出力ニューロンの出力したスパイク列
+    """
     print('\tA: ' + str(results[0]))
     print('\tB: ' + str(results[1]))
     print('\tX: ' + str(results[2]))
@@ -225,8 +233,10 @@ def test():
             spike_analysis(spikes, value)
 
 
-# Train the network
 def train():
+    """
+    学習を行う
+    """
     network = Network.Network(weights=None)
 
     mapping = dict()
@@ -238,6 +248,7 @@ def train():
              for root, dirs, files in os.walk(audio_path)
              for name in files
              if name.endswith((".wav"))]
+    print(audio)
 
     audio_path = "letter_audio/speech/isolet2"
     audio2 = [os.path.join(root, name)
