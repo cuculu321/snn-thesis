@@ -10,6 +10,7 @@ numpy = "*"
 scipy = "*"
 matplotlib = "*"
 "pyqt5" = "*"
+pyspike = "*"
 
 [dev-packages]
 
