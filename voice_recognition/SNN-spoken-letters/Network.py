@@ -22,7 +22,7 @@ class Network:
         self.b = 0.2
         self.c = -65.
         self.d = 8.
-        self.time_ita = 3000  # 100ms
+        self.time_ita = 5000  # 100ms
 
         # Build a layer of 120 input neurons (20 frames, 6 features for each frame)
         self.input_layer = []
@@ -32,7 +32,7 @@ class Network:
 
         # Build output layer, one neuron for each letter of the alphabet
         self.output_layer = []
-        for i in range(3):
+        for i in range(6):
             o = Neuron.Neuron()
             self.output_layer.append(o)
 
@@ -153,7 +153,7 @@ class Network:
 
 
         # Create a 3 neuron output vector
-        outputs = [0] * 3
+        outputs = [0] * 6
         spikes = []
         v_plts = []
         currents = []
