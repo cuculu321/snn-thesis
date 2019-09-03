@@ -20,6 +20,19 @@ import os
 
 
 def threshold(train):
+	"""
+	1Clock時に発火したニューロンの数の合計を計測し、閾値(膜電位)を決定する
+
+	Parameters
+	----------
+	train : boolean list[784, 200]
+		畳み込みデータの値によって、スパイク率を変えて出力された配列データ。
+
+	Returns
+	-------
+	(thresh / 3) * par.kScale_ : float
+		閾値
+	"""
 
 	tu = np.shape(train[0])[0]
 	thresh = 0
