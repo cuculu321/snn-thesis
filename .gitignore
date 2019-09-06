@@ -5,4 +5,5 @@
 .idea
 *.wav
 *.pyc
+*.txt
 Pipfile.lock
