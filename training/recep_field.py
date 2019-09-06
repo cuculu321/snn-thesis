@@ -11,6 +11,19 @@ import cv2
 from parameters import param as par
 
 def rf(img):
+	"""
+	画像の畳み込みを行う
+
+	Parameters
+	----------
+	img : int list[28,28]
+		畳み込みを行う画像のデータ。データは0~253で表現される
+
+	Returns
+	-------
+	potential : float list[28,28]
+		畳み込みで得られたデータ。
+	"""
 	sca1 =  0.625
 	sca2 =  0.125
 	sca3 = -0.125

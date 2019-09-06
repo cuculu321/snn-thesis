@@ -18,6 +18,19 @@ import math
 from parameters import param as par
 
 def encode(potential):
+	"""
+	畳み込みデータからスパイク列を生成する
+
+	Parameters
+	----------
+	potential : float list[28, 28]
+		画像を畳み込んで得たデータ
+
+	Returns
+	------
+	train : boolean list[784, 200]
+		畳み込みデータの値によって、スパイク率を変え出力された配列データ。
+	"""
 
 	#initializing spike train
 	train = []
