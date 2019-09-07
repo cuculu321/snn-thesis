@@ -3,6 +3,19 @@ import matplotlib.pyplot as plt
 import soundfile as sf
 
 def wav_split(file_name):
+    """
+    音声データを0.04秒ごと、オーバーラップ50%で分割する
+
+    Parameters
+	----------
+	file_name : string
+        音声ファイルのパス
+
+	Returns
+	-------
+    sig_data_array : list[float]
+        0.04秒ごとオーバーラップ50％で分割された音声データのリスト
+    """
     signal, samplerate = sf.read(file_name)
 
     # 音声波形を0.04毎、オーバーラップ50%で切り出す
