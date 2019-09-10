@@ -29,10 +29,10 @@ def wav_split(file_name):
     for cut_center in cutpoint:
         sig_data_array.append(signal[int(cut_center - cuttime / 2 * samplerate) : int(cut_center + cuttime / 2 * samplerate)])
 
-    return sig_data_array
+    return sig_data_array, samplerate
 
 if __name__ == '__main__':
-    splited_sig_array = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
+    splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
 
     time = np.arange(0, 40, 0.0625)
     x = splited_sig_array[int(len(splited_sig_array)/2)]
