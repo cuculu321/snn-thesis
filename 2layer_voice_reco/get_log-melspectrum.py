@@ -45,37 +45,37 @@ def mel2hz(m):
 def mel_filterbank(samplerate, N, melChannels):
     """メルフィルタバンクを作成"""
     # ナイキスト周波数（Hz）
-    fmax = samplerate / 2
+    nyquist_f = samplerate / 2
     # ナイキスト周波数（mel）
-    melmax = hz2mel(fmax)
+    nyquist_mel = hz2mel(nyquist_f)
     # 周波数インデックスの最大数
-    nmax = N // 2
+    frequency_index_max = N // 2
     # 周波数解像度（周波数インデックス1あたりのHz幅）
-    df = samplerate / N
+    frequency_resolution = samplerate / N
     # メル尺度における各フィルタの中心周波数を求める
-    dmel = melmax / (melChannels + 1)
-    melcenters = np.arange(1, melChannels + 1) * dmel
+    dmel = nyquist_mel / (melChannels + 1)
+    mel_centers = np.arange(1, melChannels + 1) * dmel
     # 各フィルタの中心周波数をHzに変換
-    fcenters = mel2hz(melcenters)
+    other_filter_centers = mel2hz(mel_centers)
     # 各フィルタの中心周波数を周波数インデックスに変換
-    indexcenter = np.round(fcenters / df)
+    other_filter_center_index = np.round(other_filter_centers / frequency_resolution)
     # 各フィルタの開始位置のインデックス
-    indexstart = np.hstack(([0], indexcenter[0:melChannels - 1]))
+    other_filter_index_start = np.hstack(([0],  other_filter_center_index[0:melChannels - 1]))
     # 各フィルタの終了位置のインデックス
-    indexstop = np.hstack((indexcenter[1:melChannels], [nmax]))
-    filterbank = np.zeros((melChannels, nmax))
-    print(indexstop)
+    other_filter_index_stop = np.hstack(( other_filter_center_index[1:melChannels], [frequency_index_max]))
+    filterbank = np.zeros((melChannels, frequency_index_max))
+    print(other_filter_index_stop)
     for c in range(0, melChannels):
         # 三角フィルタの左の直線の傾きから点を求める
-        increment= 1.0 / (indexcenter[c] - indexstart[c])
-        for i in range(int(indexstart[c]), int(indexcenter[c])):
-            filterbank[c, i] = (i - indexstart[c]) * increment
+        increment= 1.0 / ( other_filter_center_index[c] - other_filter_index_start[c])
+        for i in range(int(other_filter_index_start[c]), int( other_filter_center_index[c])):
+            filterbank[c, i] = (i - other_filter_index_start[c]) * increment
         # 三角フィルタの右の直線の傾きから点を求める
-        decrement = 1.0 / (indexstop[c] - indexcenter[c])
-        for i in range(int(indexcenter[c]), int(indexstop[c])):
-            filterbank[c, i] = 1.0 - ((i - indexcenter[c]) * decrement)
+        decrement = 1.0 / (other_filter_index_stop[c] -  other_filter_center_index[c])
+        for i in range(int( other_filter_center_index[c]), int(other_filter_index_stop[c])):
+            filterbank[c, i] = 1.0 - ((i -  other_filter_center_index[c]) * decrement)
 
-    return filterbank, fcenters
+    return filterbank, other_filter_centers
 
 if __name__ == '__main__':
     from wav_split import wav_split
@@ -91,12 +91,12 @@ if __name__ == '__main__':
     plt.show()
 
     melChannels = 20  # メルフィルタバンクのチャネル数
-    df = samplerate / N   # 周波数解像度（周波数インデックス1あたりのHz幅）
-    filterbank, fcenters = mel_filterbank(samplerate, N, melChannels)
+    frequency_resolution = samplerate / N   # 周波数解像度（周波数インデックス1あたりのHz幅）
+    filterbank, f_centers = mel_filterbank(samplerate, N, melChannels)
 
     # メルフィルタバンクのプロット
     for c in np.arange(0, melChannels):
-        plt.plot(np.arange(0, N / 2) * df, filterbank[c])
+        plt.plot(np.arange(0, N / 2) * frequency_resolution, filterbank[c])
 
     plt.title('Mel filter bank')
     plt.xlabel('Frequency[Hz]')
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     plt.figure(figsize=(13, 5))
 
     plt.plot(frequency_scale, 10* np.log10(amplitude_spectrum), label='Original Spectrum')
-    plt.plot(fcenters, 10 * np.log10(mel_spectrum), "o-", label='Mel Spectrum')
+    plt.plot(f_centers, 10 * np.log10(mel_spectrum), "o-", label='Mel Spectrum')
     plt.xlabel("frequency[Hz]")
     plt.ylabel('Amplitude[dB]')
     plt.legend()
