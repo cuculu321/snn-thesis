@@ -14,6 +14,10 @@ def amplitude_spectrum(signal, samplerate, N):
 
 	Returns
 	-------
+    fscale : list[float]
+        周波数
+    spec : list[float]
+        振幅スペクトル
 
     """
     # ハミング窓をかける
