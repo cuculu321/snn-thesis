@@ -15,6 +15,8 @@ def wav_split(file_name):
 	-------
     sig_data_array : list[float]
         0.04秒ごとオーバーラップ50％で分割された音声データのリスト
+    samplerate : int
+        音声データのサンプルレート
     """
     signal, samplerate = sf.read(file_name)
 
