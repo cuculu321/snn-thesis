@@ -25,10 +25,10 @@ def get_amplitude_spectrum(signal, samplerate, N):
     ham_signal = signal * hamming
 
     # 振幅スペクトルを求める
-    spec = np.abs(np.fft.fft(ham_signal, N))[:N//2]
-    fscale = np.fft.fftfreq(N, d = 1.0 / samplerate)[:N//2]
+    amplitude_spectrum = np.abs(np.fft.fft(ham_signal, N))[:N//2]
+    frequency_scale = np.fft.fftfreq(N, d = 1.0 / samplerate)[:N//2]
 
-    return fscale, spec
+    return frequency_scale, amplitude_spectrum
 
 def hz2mel(f):
     """
