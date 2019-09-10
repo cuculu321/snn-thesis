@@ -14,9 +14,9 @@ def get_amplitude_spectrum(signal, samplerate, N):
 
 	Returns
 	-------
-    fscale : list[float]
+    frequency_scale : list[float]
         周波数
-    spec : list[float]
+    amplitude_spectrum : list[float]
         振幅スペクトル
 
     """
@@ -42,7 +42,7 @@ def mel2hz(m):
     """
     return 700 * (np.exp(m / 2595) - 1.0)
 
-def mel_filterbank(fs, N, numChannels):
+def mel_filterbank(fs, N, melChannels):
     """メルフィルタバンクを作成"""
     # ナイキスト周波数（Hz）
     fmax = fs / 2
@@ -53,19 +53,19 @@ def mel_filterbank(fs, N, numChannels):
     # 周波数解像度（周波数インデックス1あたりのHz幅）
     df = fs / N
     # メル尺度における各フィルタの中心周波数を求める
-    dmel = melmax / (numChannels + 1)
-    melcenters = np.arange(1, numChannels + 1) * dmel
+    dmel = melmax / (melChannels + 1)
+    melcenters = np.arange(1, melChannels + 1) * dmel
     # 各フィルタの中心周波数をHzに変換
     fcenters = mel2hz(melcenters)
     # 各フィルタの中心周波数を周波数インデックスに変換
     indexcenter = np.round(fcenters / df)
     # 各フィルタの開始位置のインデックス
-    indexstart = np.hstack(([0], indexcenter[0:numChannels - 1]))
+    indexstart = np.hstack(([0], indexcenter[0:melChannels - 1]))
     # 各フィルタの終了位置のインデックス
-    indexstop = np.hstack((indexcenter[1:numChannels], [nmax]))
-    filterbank = np.zeros((numChannels, nmax))
+    indexstop = np.hstack((indexcenter[1:melChannels], [nmax]))
+    filterbank = np.zeros((melChannels, nmax))
     print(indexstop)
-    for c in range(0, numChannels):
+    for c in range(0, melChannels):
         # 三角フィルタの左の直線の傾きから点を求める
         increment= 1.0 / (indexcenter[c] - indexstart[c])
         for i in range(int(indexstart[c]), int(indexcenter[c])):
@@ -82,32 +82,33 @@ if __name__ == '__main__':
     splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
     N = 2048
     signal = splited_sig_array[int(len(splited_sig_array)/2)]
-    fscale, spec = get_amplitude_spectrum(signal, samplerate, N)
+    frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
+                                                            signal, samplerate, N)
 
-    plt.plot(fscale, spec)
+    plt.plot(frequency_scale, amplitude_spectrum)
     plt.xlabel("frequency [Hz]")
     plt.ylabel("amplitude spectrum")
     plt.show()
 
-    numChannels = 20  # メルフィルタバンクのチャネル数
+    melChannels = 20  # メルフィルタバンクのチャネル数
     df = samplerate / N   # 周波数解像度（周波数インデックス1あたりのHz幅）
-    filterbank, fcenters = melFilterBank(samplerate, N, numChannels)
+    filterbank, fcenters = mel_filterbank(samplerate, N, melChannels)
 
     # メルフィルタバンクのプロット
-    for c in np.arange(0, numChannels):
+    for c in np.arange(0, melChannels):
         plt.plot(np.arange(0, N / 2) * df, filterbank[c])
 
     plt.title('Mel filter bank')
     plt.xlabel('Frequency[Hz]')
     plt.show()
 
-    mspec = np.dot(spec, filterbank.T)
+    mel_spectrum = np.dot(amplitude_spectrum, filterbank.T)
 
     # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
     plt.figure(figsize=(13, 5))
 
-    plt.plot(fscale, 10* np.log10(spec), label='Original Spectrum')
-    plt.plot(fcenters, 10 * np.log10(mspec), "o-", label='Mel Spectrum')
+    plt.plot(frequency_scale, 10* np.log10(amplitude_spectrum), label='Original Spectrum')
+    plt.plot(fcenters, 10 * np.log10(mel_spectrum), "o-", label='Mel Spectrum')
     plt.xlabel("frequency[Hz]")
     plt.ylabel('Amplitude[dB]')
     plt.legend()
