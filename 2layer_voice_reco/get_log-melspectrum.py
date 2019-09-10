@@ -116,3 +116,15 @@ if __name__ == '__main__':
     plt.title('Mel filter bank')
     plt.xlabel('Frequency[Hz]')
     plt.show()
+    
+    mspec = np.dot(spec, filterbank.T)
+
+    # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
+    plt.figure(figsize=(13, 5))
+
+    plt.plot(fscale, 10* np.log10(spec), label='Original Spectrum')
+    plt.plot(fcenters, 10 * np.log10(mspec), "o-", label='Mel Spectrum')
+    plt.xlabel("frequency[Hz]")
+    plt.ylabel('Amplitude[dB]')
+    plt.legend()
+    plt.show()
