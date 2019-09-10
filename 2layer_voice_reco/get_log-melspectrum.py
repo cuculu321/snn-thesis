@@ -29,32 +29,12 @@ def filter_humming(signal, samplerate, N):
 def hz2mel(f):
     """
     周波数をメル尺度に変換
-
-    Parameters
-	----------
-    f : float
-        周波数
-
-	Returns
-	-------
-     : float
-        メル尺度
     """
     return 2595 * np.log(f / 700.0 + 1.0)
 
 def mel2hz(m):
     """
     メル尺度を周波数に変換
-
-    Parameters
-	----------
-    m : float
-        メル尺度
-
-	Returns
-	-------
-     : float
-        周波数
     """
     return 700 * (np.exp(m / 2595) - 1.0)
 
@@ -116,7 +96,7 @@ if __name__ == '__main__':
     plt.title('Mel filter bank')
     plt.xlabel('Frequency[Hz]')
     plt.show()
-    
+
     mspec = np.dot(spec, filterbank.T)
 
     # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
