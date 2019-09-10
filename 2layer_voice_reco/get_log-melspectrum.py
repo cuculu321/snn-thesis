@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def amplitude_spectrum(signal, samplerate, N):
+def get_amplitude_spectrum(signal, samplerate, N):
     """
     音声データにハミング窓をかけて振幅スペクトルを得る
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
     N = 2048
     signal = splited_sig_array[int(len(splited_sig_array)/2)]
-    fscale, spec = filter_humming(signal, samplerate, N)
+    fscale, spec = get_amplitude_spectrum(signal, samplerate, N)
 
     plt.plot(fscale, spec)
     plt.xlabel("frequency [Hz]")
