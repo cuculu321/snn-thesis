@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def filter_humming(signal, samplerate, N):
+def amplitude_spectrum(signal, samplerate, N):
     """
     音声データにハミング窓をかけて振幅スペクトルを得る
 
@@ -38,7 +38,7 @@ def mel2hz(m):
     """
     return 700 * (np.exp(m / 2595) - 1.0)
 
-def melFilterBank(fs, N, numChannels):
+def mel_filterbank(fs, N, numChannels):
     """メルフィルタバンクを作成"""
     # ナイキスト周波数（Hz）
     fmax = fs / 2
