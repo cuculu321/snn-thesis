@@ -42,16 +42,16 @@ def mel2hz(m):
     """
     return 700 * (np.exp(m / 2595) - 1.0)
 
-def mel_filterbank(fs, N, melChannels):
+def mel_filterbank(samplerate, N, melChannels):
     """メルフィルタバンクを作成"""
     # ナイキスト周波数（Hz）
-    fmax = fs / 2
+    fmax = samplerate / 2
     # ナイキスト周波数（mel）
     melmax = hz2mel(fmax)
     # 周波数インデックスの最大数
     nmax = N // 2
     # 周波数解像度（周波数インデックス1あたりのHz幅）
-    df = fs / N
+    df = samplerate / N
     # メル尺度における各フィルタの中心周波数を求める
     dmel = melmax / (melChannels + 1)
     melcenters = np.arange(1, melChannels + 1) * dmel
