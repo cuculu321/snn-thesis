@@ -27,6 +27,38 @@ def filter_humming(signal, samplerate):
 
     return fscale, spec
 
+def hz2mel(f):
+    """
+    周波数をメル尺度に変換
+
+    Parameters
+	----------
+    f : float
+        周波数
+
+	Returns
+	-------
+     : float
+        メル尺度
+    """
+    return 2595 * np.log(f / 700.0 + 1.0)
+
+def mel2hz(m):
+    """
+    メル尺度を周波数に変換
+
+    Parameters
+	----------
+    m : float
+        メル尺度
+
+	Returns
+	-------
+     : float
+        周波数
+    """
+    return 700 * (np.exp(m / 2595) - 1.0)
+
 if __name__ == '__main__':
     from wav_split import wav_split
     splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
