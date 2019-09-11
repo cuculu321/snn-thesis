@@ -77,37 +77,29 @@ def mel_filterbank(samplerate, N, melChannels):
 
     return filterbank, other_filter_centers
 
-if __name__ == '__main__':
-    from wav_split import wav_split
-    splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
+def get_log_melspectrum(signal, samplerate):
     N = 2048
-    signal = splited_sig_array[int(len(splited_sig_array)/2)]
     frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
-                                                            signal, samplerate, N)
-
-    plt.plot(frequency_scale, amplitude_spectrum)
-    plt.xlabel("frequency [Hz]")
-    plt.ylabel("amplitude spectrum")
-    plt.show()
+                                                        signal, samplerate, N)
 
     melChannels = 20  # メルフィルタバンクのチャネル数
     frequency_resolution = samplerate / N   # 周波数解像度（周波数インデックス1あたりのHz幅）
     filterbank, f_centers = mel_filterbank(samplerate, N, melChannels)
 
-    # メルフィルタバンクのプロット
-    for c in np.arange(0, melChannels):
-        plt.plot(np.arange(0, N / 2) * frequency_resolution, filterbank[c])
-
-    plt.title('Mel filter bank')
-    plt.xlabel('Frequency[Hz]')
-    plt.show()
-
     mel_spectrum = np.dot(amplitude_spectrum, filterbank.T)
+    
+    return f_centers, mel_spectrum
 
+
+if __name__ == '__main__':
+    from wav_split import wav_split
+    splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
+    signal = splited_sig_array[int(len(splited_sig_array)/2)]
+    
+    f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
     # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
     plt.figure(figsize=(13, 5))
 
-    plt.plot(frequency_scale, 10* np.log10(amplitude_spectrum), label='Original Spectrum')
     plt.plot(f_centers, 10 * np.log10(mel_spectrum), "o-", label='Mel Spectrum')
     plt.xlabel("frequency[Hz]")
     plt.ylabel('Amplitude[dB]')
