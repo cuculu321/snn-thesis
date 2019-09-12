@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from parameters import param as par
 
 def get_amplitude_spectrum(signal, samplerate, N):
     """
@@ -78,6 +79,8 @@ def mel_filterbank(samplerate, N, melChannels):
 
 def get_log_melspectrum(signal, samplerate):
     """
+    関数を使ってメルスペクトラムを算出する。実質main
+
     Parameters
 	----------
 	signal : list[float]
@@ -92,13 +95,14 @@ def get_log_melspectrum(signal, samplerate):
     mel_spectrum :
         メルスペクトラムのパラメータ
     """
-    N = 2048
-    frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
-                                                        signal, samplerate, N)
+    kFFTPoint_ = 2048 #2のn乗にすること
 
-    melChannels = 22  # メルフィルタバンクのチャネル数
-    frequency_resolution = samplerate / N   # 周波数解像度（周波数インデックス1あたりのHz幅）
-    filterbank, f_centers = mel_filterbank(samplerate, N, melChannels)
+    frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
+                                                        signal, samplerate, par.kFFTPoint_)
+
+    
+    frequency_resolution = samplerate / par.kFFTPoint_   # 周波数解像度（周波数インデックス1あたりのHz幅）
+    filterbank, f_centers = mel_filterbank(samplerate, par.kFFTPoint_, par.kMelChannelCount_)
 
     mel_spectrum = np.dot(amplitude_spectrum, filterbank.T)
     return f_centers, mel_spectrum
