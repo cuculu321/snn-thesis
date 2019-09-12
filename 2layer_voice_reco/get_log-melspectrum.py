@@ -98,11 +98,11 @@ def get_log_melspectrum(signal, samplerate):
     kFFTPoint_ = 2048 #2のn乗にすること
 
     frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
-                                                        signal, samplerate, par.kFFTPoint_)
+                                                        signal, samplerate, kFFTPoint_)
 
     
-    frequency_resolution = samplerate / par.kFFTPoint_   # 周波数解像度（周波数インデックス1あたりのHz幅）
-    filterbank, f_centers = mel_filterbank(samplerate, par.kFFTPoint_, par.kMelChannelCount_)
+    frequency_resolution = samplerate / kFFTPoint_   # 周波数解像度（周波数インデックス1あたりのHz幅）
+    filterbank, f_centers = mel_filterbank(samplerate, kFFTPoint_, par.kMelChannelCount_)
 
     mel_spectrum = np.dot(amplitude_spectrum, filterbank.T)
     return f_centers, mel_spectrum
