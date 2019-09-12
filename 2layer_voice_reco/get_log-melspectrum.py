@@ -64,7 +64,6 @@ def mel_filterbank(samplerate, N, melChannels):
     # 各フィルタの終了位置のインデックス
     other_filter_index_stop = np.hstack(( other_filter_center_index[1:melChannels], [frequency_index_max]))
     filterbank = np.zeros((melChannels, frequency_index_max))
-    print(other_filter_index_stop)
     for c in range(0, melChannels):
         # 三角フィルタの左の直線の傾きから点を求める
         increment= 1.0 / ( other_filter_center_index[c] - other_filter_index_start[c])
@@ -78,22 +77,36 @@ def mel_filterbank(samplerate, N, melChannels):
     return filterbank, other_filter_centers
 
 def get_log_melspectrum(signal, samplerate):
+    """
+    Parameters
+	----------
+	signal : list[float]
+        音声データ
+    samplerate : int
+        サンプルレート
+
+	Returns
+	-------
+    f_centers :
+        抽出したメルスペクトラムの周波数
+    mel_spectrum :
+        メルスペクトラムのパラメータ
+    """
     N = 2048
     frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
                                                         signal, samplerate, N)
 
-    melChannels = 20  # メルフィルタバンクのチャネル数
+    melChannels = 22  # メルフィルタバンクのチャネル数
     frequency_resolution = samplerate / N   # 周波数解像度（周波数インデックス1あたりのHz幅）
     filterbank, f_centers = mel_filterbank(samplerate, N, melChannels)
 
     mel_spectrum = np.dot(amplitude_spectrum, filterbank.T)
-    
     return f_centers, mel_spectrum
 
 
 if __name__ == '__main__':
     from wav_split import wav_split
-    splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
+    splited_sig_array, samplerate = wav_split("a_1.wav")
     signal = splited_sig_array[int(len(splited_sig_array)/2)]
     
     f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
