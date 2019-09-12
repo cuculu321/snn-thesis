@@ -26,6 +26,8 @@ class param:
 	kPositiveTau_ = 5
 	
 	kEpoch_ = 12
+	
+	kMelChannelCount_ = 22  # メルフィルタバンクのチャネル数
 
 #-- No use constant
 	#fr_bits = 12
