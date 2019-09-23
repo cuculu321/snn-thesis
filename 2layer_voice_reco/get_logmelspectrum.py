@@ -2,19 +2,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 from parameters import param as par
 
+
 def get_amplitude_spectrum(signal, samplerate, N):
     """
     音声データにハミング窓をかけて振幅スペクトルを得る
 
     Parameters
-	----------
-	signal : list[float]
+    ----------
+    signal : list[float]
         音声データのアナログ情報
     samplerate : int
         音声データのサンプルレート
 
-	Returns
-	-------
+    Returns
+    -------
     frequency_scale : list[float]
         周波数
     amplitude_spectrum : list[float]
@@ -26,8 +27,8 @@ def get_amplitude_spectrum(signal, samplerate, N):
     ham_signal = signal * hamming
 
     # 振幅スペクトルを求める
-    amplitude_spectrum = np.abs(np.fft.fft(ham_signal, N))[:N//2]
-    frequency_scale = np.fft.fftfreq(N, d = 1.0 / samplerate)[:N//2]
+    amplitude_spectrum = np.abs(np.fft.fft(ham_signal, N))[:N // 2]
+    frequency_scale = np.fft.fftfreq(N, d=1.0 / samplerate)[:N // 2]
 
     return frequency_scale, amplitude_spectrum
 
@@ -69,17 +70,17 @@ def mel_filterbank(samplerate, N, melChannels):
     # 各フィルタの開始位置のインデックス
     other_filter_index_start = np.hstack(([0],  other_filter_center_index[0:melChannels - 1]))
     # 各フィルタの終了位置のインデックス
-    other_filter_index_stop = np.hstack(( other_filter_center_index[1:melChannels], [frequency_index_max]))
+    other_filter_index_stop = np.hstack((other_filter_center_index[1:melChannels], [frequency_index_max]))
     filterbank = np.zeros((melChannels, frequency_index_max))
     for c in range(0, melChannels):
         # 三角フィルタの左の直線の傾きから点を求める
-        increment= 1.0 / ( other_filter_center_index[c] - other_filter_index_start[c])
-        for i in range(int(other_filter_index_start[c]), int( other_filter_center_index[c])):
+        increment = 1.0 / (other_filter_center_index[c] - other_filter_index_start[c])
+        for i in range(int(other_filter_index_start[c]), int(other_filter_center_index[c])):
             filterbank[c, i] = (i - other_filter_index_start[c]) * increment
         # 三角フィルタの右の直線の傾きから点を求める
-        decrement = 1.0 / (other_filter_index_stop[c] -  other_filter_center_index[c])
-        for i in range(int( other_filter_center_index[c]), int(other_filter_index_stop[c])):
-            filterbank[c, i] = 1.0 - ((i -  other_filter_center_index[c]) * decrement)
+        decrement = 1.0 / (other_filter_index_stop[c] - other_filter_center_index[c])
+        for i in range(int(other_filter_center_index[c]), int(other_filter_index_stop[c])):
+            filterbank[c, i] = 1.0 - ((i - other_filter_center_index[c]) * decrement)
 
     return filterbank, other_filter_centers
 
@@ -89,26 +90,25 @@ def get_log_melspectrum(signal, samplerate):
     関数を使ってメルスペクトラムを算出する。実質main
 
     Parameters
-	----------
-	signal : list[float]
+    ----------
+    signal : list[float]
         音声データ
     samplerate : int
         サンプルレート
 
-	Returns
-	-------
+    Returns
+    -------
     f_centers :
         抽出したメルスペクトラムの周波数
     mel_spectrum :
         メルスペクトラムのパラメータ
     """
 
-    kFFTPoint_ = 2048 #2のn乗にすること
+    kFFTPoint_ = 2048  # 2のn乗にすること
 
     frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
                                                         signal, samplerate, kFFTPoint_)
 
-    
     frequency_resolution = samplerate / kFFTPoint_   # 周波数解像度（周波数インデックス1あたりのHz幅）
     filterbank, f_centers = mel_filterbank(samplerate, kFFTPoint_, par.kMelChannelCount_)
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     from wav_split import wav_split
     splited_sig_array, samplerate = wav_split("a_1.wav")
     signal = splited_sig_array[int(len(splited_sig_array)/2)]
-    
+
     f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
     # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
     plt.figure(figsize=(13, 5))
