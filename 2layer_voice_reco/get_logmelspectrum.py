@@ -19,8 +19,8 @@ def get_amplitude_spectrum(signal, samplerate, N):
         周波数
     amplitude_spectrum : list[float]
         振幅スペクトル
-
     """
+
     # ハミング窓をかける
     hamming = np.hamming(len(signal))
     ham_signal = signal * hamming
@@ -31,20 +31,26 @@ def get_amplitude_spectrum(signal, samplerate, N):
 
     return frequency_scale, amplitude_spectrum
 
+
 def hz2mel(f):
     """
     周波数をメル尺度に変換
     """
+
     return 2595 * np.log(f / 700.0 + 1.0)
+
 
 def mel2hz(m):
     """
     メル尺度を周波数に変換
     """
+
     return 700 * (np.exp(m / 2595) - 1.0)
+
 
 def mel_filterbank(samplerate, N, melChannels):
     """メルフィルタバンクを作成"""
+
     # ナイキスト周波数（Hz）
     nyquist_f = samplerate / 2
     # ナイキスト周波数（mel）
@@ -77,6 +83,7 @@ def mel_filterbank(samplerate, N, melChannels):
 
     return filterbank, other_filter_centers
 
+
 def get_log_melspectrum(signal, samplerate):
     """
     関数を使ってメルスペクトラムを算出する。実質main
@@ -95,6 +102,7 @@ def get_log_melspectrum(signal, samplerate):
     mel_spectrum :
         メルスペクトラムのパラメータ
     """
+
     kFFTPoint_ = 2048 #2のn乗にすること
 
     frequency_scale, amplitude_spectrum = get_amplitude_spectrum(
