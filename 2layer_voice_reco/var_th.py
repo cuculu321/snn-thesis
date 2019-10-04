@@ -42,7 +42,7 @@ def threshold(train):
 		if simul_active > thresh:
 			thresh = simul_active
 
-	return (thresh / 3) * par.kScale_
+	return (thresh / par.kSecondLayerNuerons_) * par.kScale_
 
 
 if __name__ == '__main__':	
