@@ -47,9 +47,13 @@ def threshold(train):
 
 if __name__ == '__main__':	
 
-	img = cv2.imread("mnist1/" + str(1) + ".png", 0)
-	#img = np.array(Image.open("mnist1/" + str(1) + ".png", 0))
-	#print(img)
-	pot = rf(img)
-	train = np.array(encode(pot))
+	from wav_split import wav_split
+	from get_logmelspectrum import get_log_melspectrum
+
+	splited_sig_array, samplerate = wav_split("sounddata/F1SYB01_あ.wav")
+	signal = splited_sig_array[int(len(splited_sig_array)/2)]
+	#print(signal)
+	f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+
+	train = np.array(encode(signal))
 	print(threshold(train))
