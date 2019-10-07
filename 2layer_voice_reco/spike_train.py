@@ -64,23 +64,30 @@ if __name__  == '__main__':
 	from wav_split import wav_split
 	from get_logmelspectrum import get_log_melspectrum
 
-	splited_sig_array, samplerate = wav_split("PASL-DSR/WAVES/F1/AES/F1AES2.wav")
+	speech_file = "sounddata/F1/F1SYB01_が.wav"
+
+	splited_sig_array, samplerate = wav_split(speech_file)
 	signal = splited_sig_array[int(len(splited_sig_array)/2)]
 
-	f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+	page = 0
+	for signal in splited_sig_array:
+		page = page + 1
+		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
-	# for i in potential:
-	# 	m.append(max(i))
-	# 	n.append(min(i))
+		# for i in potential:
+		# 	m.append(max(i))
+		# 	n.append(min(i))
 
-	# print max(m), min(n)
-	train = encode(mel_spectrum)
-	f = open('look_ups/trainF1AES2.txt', 'w')
-	print(np.shape(train))
+		# print max(m), min(n)
+		train = encode(np.log10(mel_spectrum))
+		print("page: " + str(page))
+		print(np.log10(mel_spectrum))
+		f = open('look_ups/trainF1AES2が-' + str(page) + '.txt', 'w')
 
-	for i in range(201):
-		for j in range(22):
-			f.write(str(int(train[j][i])))
-		f.write('\n')
+		for i in range(201):
+			for j in range(22):
+				f.write(str(int(train[j][i])))
+			f.write('\n')
 
 	f.close()
+	print("All Encoding")
