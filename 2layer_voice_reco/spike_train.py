@@ -39,7 +39,6 @@ def encode(potential):
 
 		#calculating firing rate proportional to the membrane potential
 		freq = interp(potential[hz_point], [-1.069, 2.781], [1, 20])
-		print(freq)
 
 		# print freq
 		if freq <= 0:
