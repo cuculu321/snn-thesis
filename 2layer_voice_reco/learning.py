@@ -12,14 +12,15 @@ import numpy as np
 from neuron import neuron
 import random
 from matplotlib import pyplot as plt
-from recep_field import rf
-import cv2
 from spike_train import encode
 from rl import rl
 from rl import update
-from reconstruct import reconst_weights
 from parameters import param as par
 from var_th import threshold
+
+from get_current_directory import *
+from get_logmelspectrum import get_log_melspectrum
+from wav_split import wav_split
 import os
 
 #potentials of output neurons
@@ -40,21 +41,27 @@ for i in range(par.kSecondLayerNuerons_):
 #synapse matrix	initialization
 synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
+#get wavefile path for learning
+learning_path = get_learning_path()
+
 for i in range(par.kSecondLayerNuerons_):
 	for j in range(par.kFirstLayerNuerons_):
 		synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 for epoch in range(par.kEpoch_):
-	for image_num in range(3221, 3222):
-		print(str(image_num) + "  " + str(epoch))
-		img = cv2.imread("mnist1/" + str(image_num) + ".png", 0)
-		print("mnist1/" + str(image_num) + ".png")
+	for wave_file in learning_path:
+		print(str(wave_file) + "  " + str(epoch))
+
+		splited_sig_array, samplerate = wav_split(wave_file)
+		print(wave_file)
 
 		#Convolving image with receptive field
-		pot = rf(img)
+		signal = splited_sig_array[int(len(splited_sig_array)/2)]
+
+		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
 		#Generating spike train
-		spike_train = np.array(encode(pot))
+		spike_train = np.array(encode(mel_spectrum))
 
 		#calculating threshold value for the image
 		var_threshold = threshold(spike_train)
