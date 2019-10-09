@@ -21,7 +21,6 @@ from var_th import threshold
 from get_current_directory import *
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import wav_split
-import os
 
 #potentials of output neurons
 potential_lists = []
@@ -160,7 +159,3 @@ for second_layer_position in range(par.kSecondLayerNuerons_):
 	plt.plot(x_axis, layer2_Pth, 'r' )
 	plt.plot(x_axis, potential_lists[second_layer_position])
 	plt.show()
-
-#Reconstructing weights to analyse training
-for second_layer_position in range(par.kSecondLayerNuerons_):
-	reconst_weights(synapse[second_layer_position], second_layer_position+1)
