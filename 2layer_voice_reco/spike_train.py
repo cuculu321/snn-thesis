@@ -7,11 +7,6 @@
 
 import numpy as np
 from numpy import interp
-from neuron import neuron
-import random
-from matplotlib import pyplot as plt
-from rl import rl
-from rl import update
 import math
 from parameters import param as par
 
