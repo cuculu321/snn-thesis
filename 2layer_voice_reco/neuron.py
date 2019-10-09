@@ -5,9 +5,6 @@
 
 ###################################################################################################################################
 
-import numpy as np
-import random
-from matplotlib import pyplot as plt
 from parameters import param as par
 
 class neuron:
