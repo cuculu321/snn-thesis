@@ -51,101 +51,101 @@ for i in range(par.kSecondLayerNuerons_):
 for epoch in range(par.kEpoch_):
 	for wave_file in learning_path:
 		print(str(wave_file) + "  " + str(epoch))
-
+		
+		#音声データの読み込み
 		splited_sig_array, samplerate = wav_split(wave_file)
 		print(wave_file)
 
-		#Convolving image with receptive field
-		signal = splited_sig_array[int(len(splited_sig_array)/2)]
+		for signal in splited_sig_array:
+			#Generating melspectrum
+			f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
-		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+			#Generating spike train
+			spike_train = np.array(encode(np.log10(mel_spectrum)))
 
-		#Generating spike train
-		spike_train = np.array(encode(mel_spectrum))
+			#calculating threshold value for the image
+			var_threshold = threshold(spike_train)
 
-		#calculating threshold value for the image
-		var_threshold = threshold(spike_train)
+			# print var_threshold
+			# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
+			# var_threshold = 9
+			# print var_threshold
+			# var_D = (var_threshold*3)*0.07
+			
+			var_D = 0.15 * par.kScale_
 
-		# print var_threshold
-		# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
-		# var_threshold = 9
-		# print var_threshold
-		# var_D = (var_threshold*3)*0.07
-		
-		var_D = 0.15 * par.kScale_
+			for x in layer2:
+				x.initial(var_threshold)
 
-		for x in layer2:
-			x.initial(var_threshold)
+			#flag for lateral inhibition
+			flag_spike = 0
+			
+			img_win = 100
 
-		#flag for lateral inhibition
-		flag_spike = 0
-		
-		img_win = 100
+			active_potential = []
+			for index1 in range(par.kSecondLayerNuerons_):
+				active_potential.append(0)
 
-		active_potential = []
-		for index1 in range(par.kSecondLayerNuerons_):
-			active_potential.append(0)
+			#Leaky integrate and fire neuron dynamics
+			for time in time_array:
+				for second_layer_position, second_layer_neuron in enumerate(layer2):
+					active = []	
+					if(second_layer_neuron.t_rest < time):
+						second_layer_neuron.P = (second_layer_neuron.P 
+												+ np.dot(
+													synapse[second_layer_position], spike_train[:, time]
+												)
+												)
+						#print("synapse : " + str(synapse[second_layer_position]))
+						if(second_layer_neuron.P > par.kPrest_):
+							second_layer_neuron.P -= var_D
+						active_potential[second_layer_position] = second_layer_neuron.P
+					
+					potential_lists[second_layer_position].append(second_layer_neuron.P)
 
-		#Leaky integrate and fire neuron dynamics
-		for time in time_array:
-			for second_layer_position, second_layer_neuron in enumerate(layer2):
-				active = []	
-				if(second_layer_neuron.t_rest < time):
-					second_layer_neuron.P = (second_layer_neuron.P 
-											+ np.dot(
-												synapse[second_layer_position], spike_train[:, time]
-											  )
+				# Lateral Inhibition
+				if(flag_spike==0):
+					max_potential = max(active_potential)
+					if(max_potential > var_threshold):
+						flag_spike = 1
+						winner_neuron = np.argmax(active_potential)
+						img_win = winner_neuron
+						print("winner is " + str(winner_neuron))
+						for s in range(par.kSecondLayerNuerons_):
+							if(s != winner_neuron):
+								layer2[s].P = par.kMinPotential_
+
+				#Check for spikes and update weights				
+				for second_layer_position, second_layer_neuron in enumerate(layer2):
+					neuron_status = second_layer_neuron.check()
+					if(neuron_status == 1):
+						second_layer_neuron.t_rest = time + second_layer_neuron.t_ref
+						second_layer_neuron.P = par.kPrest_
+						for first_layer_position in range(par.kFirstLayerNuerons_):
+							#前シナプスの計算
+							for back_time in range(-2, par.kTimeBack_-1, -1): #-2 → -20
+								if 0 <= time + back_time < par.kTime_ + 1:
+									if spike_train[first_layer_position][time + back_time] == 1:
+										# print "weight change by" + str(update(synapse[j][h], rl(t1)))
+										synapse[second_layer_position][first_layer_position] = update(
+											synapse[second_layer_position][first_layer_position], rl(back_time)
 											)
-					#print("synapse : " + str(synapse[second_layer_position]))
-					if(second_layer_neuron.P > par.kPrest_):
-						second_layer_neuron.P -= var_D
-					active_potential[second_layer_position] = second_layer_neuron.P
-				
-				potential_lists[second_layer_position].append(second_layer_neuron.P)
-
-			# Lateral Inhibition
-			if(flag_spike==0):
-				max_potential = max(active_potential)
-				if(max_potential > var_threshold):
-					flag_spike = 1
-					winner_neuron = np.argmax(active_potential)
-					img_win = winner_neuron
-					print("winner is " + str(winner_neuron))
-					for s in range(par.kSecondLayerNuerons_):
-						if(s != winner_neuron):
-							layer2[s].P = par.kMinPotential_
-
-			#Check for spikes and update weights				
-			for second_layer_position, second_layer_neuron in enumerate(layer2):
-				neuron_status = second_layer_neuron.check()
-				if(neuron_status == 1):
-					second_layer_neuron.t_rest = time + second_layer_neuron.t_ref
-					second_layer_neuron.P = par.kPrest_
-					for first_layer_position in range(par.kFirstLayerNuerons_):
-						#前シナプスの計算
-						for back_time in range(-2, par.kTimeBack_-1, -1): #-2 → -20
-							if 0 <= time + back_time < par.kTime_ + 1:
-								if spike_train[first_layer_position][time + back_time] == 1:
-									# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-									synapse[second_layer_position][first_layer_position] = update(
-										synapse[second_layer_position][first_layer_position], rl(back_time)
-										)
-									 
-						#後シナプスの計算
-						for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
-							if 0 <= time + fore_time<par.kTime_+1:
-								if spike_train[first_layer_position][time + fore_time] == 1:
-									# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-									synapse[second_layer_position][first_layer_position] = update(
-										synapse[second_layer_position][first_layer_position], rl(fore_time)
-										)
-									
-		if(img_win!=100):
-			for first_layer_position in range(par.kFirstLayerNuerons_):
-				if sum(spike_train[first_layer_position]) == 0:
-					synapse[img_win][first_layer_position] -= 0.06 * par.kScale_
-					if(synapse[img_win][first_layer_position]<par.kMinWait_):
-						synapse[img_win][first_layer_position] = par.kMinWait_
+										
+							#後シナプスの計算
+							for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
+								if 0 <= time + fore_time<par.kTime_+1:
+									if spike_train[first_layer_position][time + fore_time] == 1:
+										# print "weight change by" + str(update(synapse[j][h], rl(t1)))
+										synapse[second_layer_position][first_layer_position] = update(
+											synapse[second_layer_position][first_layer_position], rl(fore_time)
+											)
+										
+			if(img_win!=100):
+				for first_layer_position in range(par.kFirstLayerNuerons_):
+					if sum(spike_train[first_layer_position]) == 0:
+						synapse[img_win][first_layer_position] -= 0.06 * par.kScale_
+						if(synapse[img_win][first_layer_position]<par.kMinWait_):
+							synapse[img_win][first_layer_position] = par.kMinWait_
 		
 
 x_axis = np.arange(0, len(potential_lists[0]), 1)
