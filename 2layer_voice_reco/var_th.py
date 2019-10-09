@@ -6,15 +6,8 @@
 
 
 import numpy as np
-from neuron import neuron
-import random
-from matplotlib import pyplot as plt
 from spike_train import encode
-from rl import rl
-from rl import update
 from parameters import param as par
-import os
-
 
 def threshold(train):
 	"""
