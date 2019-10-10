@@ -41,7 +41,7 @@ for i in range(par.kSecondLayerNuerons_):
 synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 #get wavefile path for learning
-learning_path = get_learning_path()
+learning_path = get_learningfile_path()
 
 for i in range(par.kSecondLayerNuerons_):
 	for j in range(par.kFirstLayerNuerons_):

@@ -2,7 +2,7 @@ import pathlib
 import glob
 import re
 
-def get_learning_path():
+def get_learningfile_path():
     """
     学習に使う音声ファイルのパスを取得する
 
@@ -20,7 +20,7 @@ def get_learning_path():
                                 if "SYB" not in str(path))
     return path_wavefile
 
-def get_mapping_path():
+def get_mappingfile_path():
     """
     対応づけに使う音声ファイルのパスを取得する
 
@@ -37,7 +37,7 @@ def get_mapping_path():
                                 if "SYB" in str(path))
     return path_wavefile
 
-def get_test_path():
+def get_testfile_path():
     """
     テストに使う音声ファイルのパスを取得する
 
