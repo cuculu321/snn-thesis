@@ -126,18 +126,14 @@ for epoch in range(par.kEpoch_):
 								if 0 <= time + back_time < par.kTime_ + 1:
 									if spike_train[first_layer_position][time + back_time] == 1:
 										# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-										synapse[second_layer_position][first_layer_position] = update(
-											synapse[second_layer_position][first_layer_position], rl(back_time)
-											)
+										synapse_update(first_layer_position, second_layer_position, back_time)
 										
 							#後シナプスの計算
 							for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
 								if 0 <= time + fore_time<par.kTime_+1:
 									if spike_train[first_layer_position][time + fore_time] == 1:
 										# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-										synapse[second_layer_position][first_layer_position] = update(
-											synapse[second_layer_position][first_layer_position], rl(fore_time)
-											)
+										synapse_update(first_layer_position, second_layer_position, fore_time)
 										
 			if(img_win!=100):
 				for first_layer_position in range(par.kFirstLayerNuerons_):
@@ -145,7 +141,7 @@ for epoch in range(par.kEpoch_):
 						synapse[img_win][first_layer_position] -= 0.06 * par.kScale_
 						if(synapse[img_win][first_layer_position]<par.kMinWait_):
 							synapse[img_win][first_layer_position] = par.kMinWait_
-		
+
 
 x_axis = np.arange(0, len(potential_lists[0]), 1)
 layer2_Pth = []
@@ -159,3 +155,8 @@ for second_layer_position in range(par.kSecondLayerNuerons_):
 	plt.plot(x_axis, layer2_Pth, 'r' )
 	plt.plot(x_axis, potential_lists[second_layer_position])
 	plt.show()
+
+def synapse_update(first_layer_position, second_layer_position, time):
+	synapse[second_layer_position][first_layer_position] = update(
+		synapse[second_layer_position][first_layer_position], rl(fore_time)
+		)
