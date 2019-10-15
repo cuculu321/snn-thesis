@@ -49,7 +49,7 @@ def learning():
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 	for epoch in range(1):
-		for wave_file in learning_path:
+		for wave_file in ["PASL-DSR\WAVES\F1\ATR\F1ATR002.wav"]:
 			print(str(wave_file) + "  " + str(epoch))
 			
 			#音声データの読み込み
@@ -127,15 +127,21 @@ def learning():
 									if 0 <= time + back_time < par.kTime_ + 1:
 										if spike_train[first_layer_position][time + back_time] == 1:
 											# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-											synapse_update(first_layer_position, second_layer_position, synapse, back_time)
-											
+											synapse[second_layer_position][first_layer_position] = update(
+												synapse[second_layer_position][first_layer_position], rl(back_time)
+												)
+											print("back : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
 								#後シナプスの計算
 								for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
 									if 0 <= time + fore_time<par.kTime_+1:
 										if spike_train[first_layer_position][time + fore_time] == 1:
 											# print "weight change by" + str(update(synapse[j][h], rl(t1)))
-											synapse_update(first_layer_position, second_layer_position, synapse, fore_time)
-											
+											synapse[second_layer_position][first_layer_position] = update(
+												synapse[second_layer_position][first_layer_position], rl(fore_time)
+												)
+											print("fron : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
+
+
 				if(img_win!=100):
 					for first_layer_position in range(par.kFirstLayerNuerons_):
 						if sum(spike_train[first_layer_position]) == 0:
@@ -145,11 +151,6 @@ def learning():
 
 	return potential_lists, synapse
 
-
-def synapse_update(first_layer_position, second_layer_position, synapse, time):
-	synapse[second_layer_position][first_layer_position] = update(
-		synapse[second_layer_position][first_layer_position], rl(time)
-		)
 
 if __name__ == "__main__":
 	potential_lists, synapse = learning()
