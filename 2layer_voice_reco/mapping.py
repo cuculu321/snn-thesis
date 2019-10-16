@@ -98,15 +98,22 @@ def winner_take_all(synapse, mapping_path):
 									layer2[s].P = par.kMinPotential_
 	
 	#勝ったニューロンの特定
-	print(max_index(neuron_spiked))
+	print("win neuron : " + str(max_index(neuron_spiked)))
+
+	#mapping
+	
 
 def max_index(list_data):
 	np_list_name = np.array(list_data)
 	return np_list_name.argmax()
 
+def extract_label(wav_file_name):
+	wav_file_str = str(wav_file_name)
+	return wav_file_str[wav_file_str.find("_") + 1 : wav_file_str.find(".wav")]
+
 
 if __name__ == "__main__":
-    synapse = [[ 3.72398963e-01,3.89442369e-01,1.37038482e-01,1.47811475e-02
+	synapse = [[ 3.72398963e-01,3.89442369e-01,1.37038482e-01,1.47811475e-02
 , 2.11517617e-01,1.08359960e-01,1.33691211e-01,1.60309866e-01
 , 2.04072198e-01,1.37332008e-01,1.44322850e-01,1.69130813e-01
 , 1.39019533e-01,1.79828068e-01,3.19896369e-01,1.58253329e-01
@@ -768,5 +775,7 @@ if __name__ == "__main__":
 , 6.60998471e-02,3.24091105e-01]]
 
 
-    mapping_path = get_mappingfile_path()
-    winner_take_all(synapse, mapping_path)
+	mapping_path = get_mappingfile_path()
+	for syllable_num in range(len(mapping_path[0])):
+		print(extract_label(mapping_path[0][syllable_num]))
+		#winner_take_all(synapse, mapping_data)
