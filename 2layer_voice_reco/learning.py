@@ -49,7 +49,8 @@ def learning():
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 	for epoch in range(1):
-		for wave_file in ["PASL-DSR\WAVES\F1\ATR\F1ATR002.wav"]:
+		#for wave_file in learning_path:
+		for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			print(str(wave_file) + "  " + str(epoch))
 			
 			#音声データの読み込み
@@ -149,18 +150,18 @@ def learning():
 							if(synapse[img_win][first_layer_position]<par.kMinWait_):
 								synapse[img_win][first_layer_position] = par.kMinWait_
 
-	return potential_lists, synapse
+	return potential_lists, synapse, layer2
 
 
 if __name__ == "__main__":
-	potential_lists, synapse = learning()
+	potential_lists, synapse, layer2 = learning()
 
 	x_axis = np.arange(0, len(potential_lists[0]), 1)
 	layer2_Pth = []
 	for i in range(len(x_axis)):
 		layer2_Pth.append(layer2[0].Pth)
 
-	#plotting 
+	#plotting
 	for second_layer_position in range(par.kSecondLayerNuerons_):
 		axes = plt.gca()
 		axes.set_ylim([-20,50])
