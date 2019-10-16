@@ -8,9 +8,7 @@ from var_th import threshold
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import wav_split
 
-from get_current_directory import get_mappingfile_path
-
-def winner_take_all(synapse, mapping_path):
+def winner_take_all(synapse, wave_file):
 	#potentials of output neurons
 	potential_lists = []
 	for i in range(par.kSecondLayerNuerons_):
@@ -29,73 +27,71 @@ def winner_take_all(synapse, mapping_path):
 	neuron_spiked = np.zeros(par.kSecondLayerNuerons_)
 
 	for epoch in range(1):
-		#for wave_file in mapping_path:
-		for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
-			print(str(wave_file) + "  " + str(epoch))
+		print(str(wave_file) + "  " + str(epoch))
+		
+		#音声データの読み込み
+		splited_sig_array, samplerate = wav_split(wave_file)
+		print(wave_file)
+
+		for signal in splited_sig_array:
+			#Generating melspectrum
+			f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+
+			#Generating spike train
+			spike_train = np.array(encode(np.log10(mel_spectrum)))
+
+			#calculating threshold value for the image
+			var_threshold = threshold(spike_train)
+
+			# print var_threshold
+			# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
+			# var_threshold = 9
+			# print var_threshold
+			# var_D = (var_threshold*3)*0.07
 			
-			#音声データの読み込み
-			splited_sig_array, samplerate = wav_split(wave_file)
-			print(wave_file)
+			var_D = 0.15 * par.kScale_
 
-			for signal in splited_sig_array:
-				#Generating melspectrum
-				f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+			for x in layer2:
+				x.initial(var_threshold)
 
-				#Generating spike train
-				spike_train = np.array(encode(np.log10(mel_spectrum)))
+			#flag for lateral inhibition
+			flag_spike = 0
+			
+			img_win = 100
 
-				#calculating threshold value for the image
-				var_threshold = threshold(spike_train)
+			active_potential = []
+			for index1 in range(par.kSecondLayerNuerons_):
+				active_potential.append(0)
 
-				# print var_threshold
-				# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
-				# var_threshold = 9
-				# print var_threshold
-				# var_D = (var_threshold*3)*0.07
-				
-				var_D = 0.15 * par.kScale_
+			#Leaky integrate and fire neuron dynamics
+			for time in time_array:
+				for second_layer_position, second_layer_neuron in enumerate(layer2):
+					active = []	
+					if(second_layer_neuron.t_rest < time):
+						second_layer_neuron.P = (second_layer_neuron.P 
+												+ np.dot(
+													synapse[second_layer_position], spike_train[:, time]
+												)
+												)
+						#print("synapse : " + str(synapse[second_layer_position]))
+						if(second_layer_neuron.P > par.kPrest_):
+							second_layer_neuron.P -= var_D
+						active_potential[second_layer_position] = second_layer_neuron.P
+					
+					potential_lists[second_layer_position].append(second_layer_neuron.P)
 
-				for x in layer2:
-					x.initial(var_threshold)
-
-				#flag for lateral inhibition
-				flag_spike = 0
-				
-				img_win = 100
-
-				active_potential = []
-				for index1 in range(par.kSecondLayerNuerons_):
-					active_potential.append(0)
-
-				#Leaky integrate and fire neuron dynamics
-				for time in time_array:
-					for second_layer_position, second_layer_neuron in enumerate(layer2):
-						active = []	
-						if(second_layer_neuron.t_rest < time):
-							second_layer_neuron.P = (second_layer_neuron.P 
-													+ np.dot(
-														synapse[second_layer_position], spike_train[:, time]
-													)
-													)
-							#print("synapse : " + str(synapse[second_layer_position]))
-							if(second_layer_neuron.P > par.kPrest_):
-								second_layer_neuron.P -= var_D
-							active_potential[second_layer_position] = second_layer_neuron.P
-						
-						potential_lists[second_layer_position].append(second_layer_neuron.P)
-
-					# Lateral Inhibition
-					if(flag_spike==0):
-						max_potential = max(active_potential)
-						if(max_potential > var_threshold):
-							flag_spike = 1
-							winner_neuron = np.argmax(active_potential)
-							img_win = winner_neuron
-							neuron_spiked[winner_neuron] += 1
-							print("winner is " + str(winner_neuron))
-							for s in range(par.kSecondLayerNuerons_):
-								if(s != winner_neuron):
-									layer2[s].P = par.kMinPotential_
+				# Lateral Inhibition
+				if(flag_spike==0):
+					max_potential = max(active_potential)
+					if(max_potential > var_threshold):
+						flag_spike = 1
+						winner_neuron = np.argmax(active_potential)
+						img_win = winner_neuron
+						neuron_spiked[winner_neuron] += 1
+						print("winner is " + str(winner_neuron))
+						for s in range(par.kSecondLayerNuerons_):
+							if(s != winner_neuron):
+								layer2[s].P = par.kMinPotential_
 	
 	#勝ったニューロンの特定
 	print("win neuron : " + str(max_index(neuron_spiked)))
@@ -775,7 +771,16 @@ if __name__ == "__main__":
 , 6.60998471e-02,3.24091105e-01]]
 
 
+	import random
+	from get_current_directory import get_mappingfile_path
+
+	used_wav_file = []
+	speaker_roulette = [i for i in range(0, 12)]
+
 	mapping_path = get_mappingfile_path()
 	for syllable_num in range(len(mapping_path[0])):
-		print(extract_label(mapping_path[0][syllable_num]))
-		#winner_take_all(synapse, mapping_data)
+		use_speakers = random.sample(speaker_roulette, 6)
+		print(use_speakers)
+		used_wav_file.append(use_speakers)
+		for speaker in use_speakers:
+			winner_take_all(synapse, mapping_path[speaker][syllable_num])
