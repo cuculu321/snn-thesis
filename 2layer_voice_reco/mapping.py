@@ -96,7 +96,13 @@ def winner_take_all(synapse, mapping_path):
 							for s in range(par.kSecondLayerNuerons_):
 								if(s != winner_neuron):
 									layer2[s].P = par.kMinPotential_
-	print(neuron_spiked)
+	
+	#勝ったニューロンの特定
+	print(max_index(neuron_spiked))
+
+def max_index(list_data):
+	np_list_name = np.array(list_data)
+	return np_list_name.argmax()
 
 
 if __name__ == "__main__":
