@@ -26,6 +26,8 @@ def winner_take_all(synapse, mapping_path):
 		a = neuron()
 		layer2.append(a)
 
+	neuron_spiked = np.zeros(par.kSecondLayerNuerons_)
+
 	for epoch in range(1):
 		#for wave_file in mapping_path:
 		for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
@@ -89,10 +91,12 @@ def winner_take_all(synapse, mapping_path):
 							flag_spike = 1
 							winner_neuron = np.argmax(active_potential)
 							img_win = winner_neuron
+							neuron_spiked[winner_neuron] += 1
 							print("winner is " + str(winner_neuron))
 							for s in range(par.kSecondLayerNuerons_):
 								if(s != winner_neuron):
 									layer2[s].P = par.kMinPotential_
+	print(neuron_spiked)
 
 
 if __name__ == "__main__":
