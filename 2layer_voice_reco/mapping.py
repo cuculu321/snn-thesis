@@ -783,10 +783,14 @@ if __name__ == "__main__":
 	mapping_list = [[] for _ in range(110)]
 
 	mapping_path = get_mappingfile_path()
+	for i in range(len(mapping_path)):
+		mapping_path[i].sort()
+
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_roulette, 6)
 		print(use_speakers)
 		used_wav_file.append(use_speakers)
 		for speaker in use_speakers:
+			print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
 			mapping_list = winner_take_all(synapse, mapping_path[speaker][syllable_num], mapping_list)
 			print(mapping_list)
