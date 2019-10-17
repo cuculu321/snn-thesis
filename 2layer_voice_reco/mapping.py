@@ -8,7 +8,7 @@ from var_th import threshold
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import wav_split
 
-def winner_take_all(synapse, wave_file):
+def winner_take_all(synapse, wave_file, mapping_list):
 	#potentials of output neurons
 	potential_lists = []
 	for i in range(par.kSecondLayerNuerons_):
@@ -97,7 +97,10 @@ def winner_take_all(synapse, wave_file):
 	print("win neuron : " + str(max_index(neuron_spiked)))
 
 	#mapping
-	
+	mapping_list[max_index(neuron_spiked)].append(extract_label(wave_file))
+
+	return mapping_list
+
 
 def max_index(list_data):
 	np_list_name = np.array(list_data)
@@ -777,10 +780,13 @@ if __name__ == "__main__":
 	used_wav_file = []
 	speaker_roulette = [i for i in range(0, 12)]
 
+	mapping_list = [[] for _ in range(110)]
+
 	mapping_path = get_mappingfile_path()
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_roulette, 6)
 		print(use_speakers)
 		used_wav_file.append(use_speakers)
 		for speaker in use_speakers:
-			winner_take_all(synapse, mapping_path[speaker][syllable_num])
+			mapping_list = winner_take_all(synapse, mapping_path[speaker][syllable_num], mapping_list)
+			print(mapping_list)
