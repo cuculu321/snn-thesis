@@ -9,6 +9,7 @@ scipy = "*"
 matplotlib = "*"
 soundfile = "*"
 "pyqt5" = "*"
+pandas = "*"
 
 [dev-packages]
 
