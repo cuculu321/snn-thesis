@@ -22,7 +22,8 @@ def create_timestamp():
 
 def import_synapse(txt_path_str):
 	synapse_str = read_txtfile(txt_path_str)
-	return synapse_str2list(synapse_str)
+	synapse_list_str = synapse_str2list(synapse_str)
+	return list_str2float(synapse_list_str)
 
 
 def read_txtfile(txt_path_str):
@@ -39,6 +40,15 @@ def synapse_str2list(synapse_str):
 	return synapse_list
 
 
+def list_str2float(list_str):
+	list_float = []
+	for str1 in list_str:
+		list_float.append(list(map(float, str1)))
+
+	return list_float
+
+
+
 if __name__ == "__main__":
 	synapse = import_synapse("synapse_recoed/sample_synapse.txt")
-	export_txt(synapse, create_timestamp())
+	#export_txt(synapse, create_timestamp())
