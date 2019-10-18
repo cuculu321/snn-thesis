@@ -32,9 +32,16 @@ def get_mappingfile_path():
     対応づけに使う音声ファイルのパス
     """
 
-    path_PASLDSR = pathlib.Path('PASL-DSR')
-    path_wavefile = list(path for path in path_PASLDSR.glob('**/**/*.wav')
-                                if "SYB" in str(path))
+    path_PASLDSR = pathlib.Path('sounddata')
+
+    path_speaker = list(path for path in path_PASLDSR.iterdir() 
+                                    if not "DS_Store" in str(path))
+
+    path_wavefile = []
+    for speaker in path_speaker:
+        path_wavefile.append(list(path for path in speaker.glob('*.wav')
+                                    if "SYB" in str(path)))
+
     return path_wavefile
 
 def get_testfile_path():
@@ -55,4 +62,5 @@ def get_testfile_path():
     return path_wavefile
 
 if __name__ == "__main__":
-    get_learning_path()
+    mapping_filelist = get_mappingfile_path()
+    print(mapping_filelist[0][1])
