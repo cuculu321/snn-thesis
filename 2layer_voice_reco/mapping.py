@@ -8,6 +8,8 @@ from var_th import threshold
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import wav_split
 
+from collections import Counter
+
 def winner_take_all(synapse, wave_file):
 	#potentials of output neurons
 	potential_lists = []
@@ -103,13 +105,30 @@ def max_index(list_data):
 	np_list_name = np.array(list_data)
 	return np_list_name.argmax()
 
+
 def extract_label(wav_file_name):
 	wav_file_str = str(wav_file_name)
 	return wav_file_str[wav_file_str.find("_") + 1 : wav_file_str.find(".wav")]
 
+
 def mapping(mapping_list, neuron_potision, checked_wavfile):
 	mapping_list[neuron_potision].append(extract_label(checked_wavfile))
-	print(mapping_list)
+	return mapping_list
+
+
+def calculate_mode(list_data):
+    c = Counter(list_data)
+    # すべての要素とその出現回数を取り出します。
+    freq_scores = c.most_common()
+    #c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
+    max_count = freq_scores[0][1]
+
+    modes = []
+    for num in freq_scores:
+        if num[1] == max_count:
+            modes.append(num[0])
+    return modes
+
 
 if __name__ == "__main__":
 	synapse = [[ 3.72398963e-01,3.89442369e-01,1.37038482e-01,1.47811475e-02
@@ -790,9 +809,12 @@ if __name__ == "__main__":
 		use_speakers = random.sample(speaker_roulette, 6)
 		print(use_speakers)
 		used_wav_file.append(use_speakers)
+		winner_neurons = []
 		for speaker in use_speakers:
 			print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
-			winner_neuron = winner_take_all(synapse, mapping_path[speaker][syllable_num])
+			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
 	
-			mapping_list = mapping(mapping_list, winner_neuron, mapping_path[speaker][syllable_num])
-			print(mapping_list)
+		neuron_mode = calculate_mode(winner_neurons)
+		print(neuron_mode[0])
+		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
+		print(mapping_list)
