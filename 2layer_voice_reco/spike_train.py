@@ -58,6 +58,7 @@ if __name__  == '__main__':
 	# n = []
 	from wav_split import wav_split
 	from get_logmelspectrum import get_log_melspectrum
+	from record_synapse import export_txt
 
 	speech_file = "sounddata/F1/F1SYB01_が.wav"
 
@@ -77,12 +78,7 @@ if __name__  == '__main__':
 		train = encode(np.log10(mel_spectrum))
 		print("page: " + str(page))
 		print(np.log10(mel_spectrum))
-		f = open('look_ups/trainF1AES2が-' + str(page) + '.txt', 'w')
 
-		for i in range(201):
-			for j in range(22):
-				f.write(str(int(train[j][i])))
-			f.write('\n')
+		export_txt(train, "trainF1AES2が")
 
-	f.close()
 	print("All Encoding")
