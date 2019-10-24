@@ -139,7 +139,7 @@ if __name__ == "__main__":
 	synapse = import_synapse("synapse_recoed/sample_synapse.txt")
 
 	used_wav_file = []
-	speaker_roulette = [i for i in range(0, 12)]
+	speaker_list = [i for i in range(0, 12)]
 
 	mapping_list = [[] for _ in range(110)]
 
@@ -148,7 +148,7 @@ if __name__ == "__main__":
 		mapping_path[i].sort()
 
 	for syllable_num in range(len(mapping_path[0])):
-		use_speakers = random.sample(speaker_roulette, 6)
+		use_speakers = random.sample(speaker_list, 6)
 		print(use_speakers)
 		used_wav_file.append(use_speakers)
 		winner_neurons = []
