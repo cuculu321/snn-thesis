@@ -154,7 +154,40 @@ def learning():
 
 
 if __name__ == "__main__":
+	from record_synapse import *
+	import random
+	from get_current_directory import get_mappingfile_path
+	from mapping import *
+
 	potential_lists, synapse, layer2 = learning()
+
+	print("synapse : ")
+	print(synapse)
+	export_txt(synapse, create_timestamp())
+
+	secondhand_wav_file = []
+	speaker_list = [i for i in range(0, 12)]
+
+	mapping_list = [[] for _ in range(110)]
+
+	mapping_path = get_mappingfile_path()
+	for i in range(len(mapping_path)):
+		mapping_path[i].sort()
+
+	for syllable_num in range(len(mapping_path[0])):
+		use_speakers = random.sample(speaker_list, 6)
+		print(use_speakers)
+		secondhand_wav_file.append(use_speakers)
+		winner_neurons = []
+		for speaker in use_speakers:
+			print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
+	
+		neuron_mode = calculate_mode(winner_neurons)
+		print(neuron_mode[0])
+		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
+		print(mapping_list)
+
 
 	x_axis = np.arange(0, len(potential_lists[0]), 1)
 	layer2_Pth = []
