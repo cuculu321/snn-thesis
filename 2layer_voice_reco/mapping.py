@@ -102,6 +102,18 @@ def winner_take_all(synapse, wave_file):
 
 
 def max_index(list_data):
+	"""
+    リストデータの中の最大の値を示すindexを取得する
+
+    Parameters
+	----------
+	リストデータ
+
+	Returns
+	-------
+    最大値のindex
+    """
+
 	np_list_name = np.array(list_data)
 	return np_list_name.argmax()
 
