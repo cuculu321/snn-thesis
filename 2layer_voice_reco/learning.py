@@ -7,7 +7,6 @@
 
 #####################################################################################################################################
 
-
 import numpy as np
 from neuron import neuron
 import random
@@ -18,6 +17,7 @@ from rl import update
 from parameters import param as par
 from var_th import threshold
 
+from console_write import *
 from get_current_directory import *
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import wav_split
@@ -42,20 +42,20 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_learningfile_path()
+	learning_path = get_learning_small_file_path()
 
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 	for epoch in range(1):
-		#for wave_file in learning_path:
-		for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
-			print(str(wave_file) + "  " + str(epoch))
+		for wave_file in learning_path:
+		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
+			resemble_print(str(wave_file) + "  " + str(epoch))
 			
 			#音声データの読み込み
-			splited_sig_array, samplerate = wav_split(wave_file)
-			print(wave_file)
+			splited_sig_array, samplerate = wav_split(str(wave_file))
+			resemble_print(str(wave_file))
 
 			for signal in splited_sig_array:
 				#Generating melspectrum
@@ -67,10 +67,10 @@ def learning():
 				#calculating threshold value for the image
 				var_threshold = threshold(spike_train)
 
-				# print var_threshold
+				# resemble_print var_threshold
 				# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
 				# var_threshold = 9
-				# print var_threshold
+				# resemble_print var_threshold
 				# var_D = (var_threshold*3)*0.07
 				
 				var_D = 0.15 * par.kScale_
@@ -97,7 +97,7 @@ def learning():
 														synapse[second_layer_position], spike_train[:, time]
 													)
 													)
-							#print("synapse : " + str(synapse[second_layer_position]))
+							#resemble_print("synapse : " + str(synapse[second_layer_position]))
 							if(second_layer_neuron.P > par.kPrest_):
 								second_layer_neuron.P -= var_D
 							active_potential[second_layer_position] = second_layer_neuron.P
@@ -111,7 +111,7 @@ def learning():
 							flag_spike = 1
 							winner_neuron = np.argmax(active_potential)
 							img_win = winner_neuron
-							print("winner is " + str(winner_neuron))
+							resemble_print("winner is " + str(winner_neuron))
 							for s in range(par.kSecondLayerNuerons_):
 								if(s != winner_neuron):
 									layer2[s].P = par.kMinPotential_
@@ -127,20 +127,20 @@ def learning():
 								for back_time in range(-2, par.kTimeBack_-1, -1): #-2 → -20
 									if 0 <= time + back_time < par.kTime_ + 1:
 										if spike_train[first_layer_position][time + back_time] == 1:
-											# print "weight change by" + str(update(synapse[j][h], rl(t1)))
+											# resemble_print "weight change by" + str(update(synapse[j][h], rl(t1)))
 											synapse[second_layer_position][first_layer_position] = update(
 												synapse[second_layer_position][first_layer_position], rl(back_time)
 												)
-											print("back : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
+											resemble_print("back : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
 								#後シナプスの計算
 								for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
 									if 0 <= time + fore_time<par.kTime_+1:
 										if spike_train[first_layer_position][time + fore_time] == 1:
-											# print "weight change by" + str(update(synapse[j][h], rl(t1)))
+											# resemble_print "weight change by" + str(update(synapse[j][h], rl(t1)))
 											synapse[second_layer_position][first_layer_position] = update(
 												synapse[second_layer_position][first_layer_position], rl(fore_time)
 												)
-											print("fron : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
+											resemble_print("fron : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
 
 
 				if(img_win!=100):
@@ -161,8 +161,8 @@ if __name__ == "__main__":
 
 	potential_lists, synapse, layer2 = learning()
 
-	print("synapse : ")
-	print(synapse)
+	resemble_print("synapse : ")
+	resemble_print(synapse)
 	export_txt(synapse, create_timestamp())
 
 	secondhand_wav_file = []
@@ -176,17 +176,17 @@ if __name__ == "__main__":
 
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_list, 6)
-		print(use_speakers)
+		resemble_print(use_speakers)
 		secondhand_wav_file.append(use_speakers)
 		winner_neurons = []
 		for speaker in use_speakers:
-			print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
 			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
 	
 		neuron_mode = calculate_mode(winner_neurons)
-		print(neuron_mode[0])
+		resemble_print(neuron_mode[0])
 		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
-		print(mapping_list)
+		resemble_print(mapping_list)
 
 
 	x_axis = np.arange(0, len(potential_lists[0]), 1)
