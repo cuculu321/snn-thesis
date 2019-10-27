@@ -121,6 +121,21 @@ def max_index(list_data):
 
 
 def extract_label(wav_file_name):
+	"""
+    音声データのパスからラベル部分を抽出する
+	ex : F1SYB08_ろ.wav → ろ
+
+    Parameters
+	----------
+	wav_file_name : (windows環境なら)WindowsPath
+		音声データのパス
+
+	Returns
+	-------
+	string : 
+		ラベル部分
+    """
+
 	wav_file_str = str(wav_file_name)
 	return wav_file_str[wav_file_str.find("_") + 1 : wav_file_str.find(".wav")]
 
