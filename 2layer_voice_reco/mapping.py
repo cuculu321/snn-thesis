@@ -107,11 +107,13 @@ def max_index(list_data):
 
     Parameters
 	----------
-	リストデータ
+	list : int list[any]
+		リストデータ
 
 	Returns
 	-------
-    最大値のindex
+	int : 
+		最大値のindex
     """
 
 	np_list_name = np.array(list_data)
