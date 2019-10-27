@@ -141,6 +141,26 @@ def extract_label(wav_file_name):
 
 
 def mapping(mapping_list, neuron_potision, checked_wavfile):
+	"""
+	発火したニューロンの位置に適当する、対応付けリストの列に与えていた音声ファイルのラベルを挿入する
+
+	Parameters
+	----------
+	mapping_list : string list[kSecondLayerNuerons_]
+		対応付けを記すリスト
+	
+	neuron_potision : int
+		発火したニューロン
+
+	checked_wavfile : string
+		現在SNNに与えていたwavfileのパス
+
+	Returns
+	------
+	mapping_list : string list[kSecondLayerNuerons_]
+		対応付けを記すリスト
+	"""
+	
 	mapping_list[neuron_potision].append(extract_label(checked_wavfile))
 	return mapping_list
 
