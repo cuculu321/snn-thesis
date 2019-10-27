@@ -32,7 +32,7 @@ def winner_take_all(synapse, wave_file):
 		print(str(wave_file) + "  " + str(epoch))
 		
 		#音声データの読み込み
-		splited_sig_array, samplerate = wav_split(wave_file)
+		splited_sig_array, samplerate = wav_split(str(wave_file))
 		print(wave_file)
 
 		for signal in splited_sig_array:
@@ -68,7 +68,7 @@ def winner_take_all(synapse, wave_file):
 			#Leaky integrate and fire neuron dynamics
 			for time in time_array:
 				for second_layer_position, second_layer_neuron in enumerate(layer2):
-					active = []	
+					active = []
 					if(second_layer_neuron.t_rest < time):
 						second_layer_neuron.P = (second_layer_neuron.P 
 												+ np.dot(
@@ -166,17 +166,32 @@ def mapping(mapping_list, neuron_potision, checked_wavfile):
 
 
 def calculate_mode(list_data):
-    c = Counter(list_data)
-    # すべての要素とその出現回数を取り出します。
-    freq_scores = c.most_common()
-    #c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
-    max_count = freq_scores[0][1]
+	"""
+	最も発火数の多かったニューロンを返す。複数ある場合は全て返す。
 
-    modes = []
-    for num in freq_scores:
-        if num[1] == max_count:
-            modes.append(num[0])
-    return modes
+	Parameters
+	----------
+	list_data : int list[6]
+		マッピングに使った6人の発火したニューロン
+
+	Returns
+	-------
+	modes : int list[any]
+		最も発火したニューロンのリスト
+
+	"""
+
+	c = Counter(list_data)
+	# すべての要素とその出現回数を取り出します。
+	freq_scores = c.most_common()
+	#c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
+	max_count = freq_scores[0][1]
+
+	modes = []
+	for num in freq_scores:
+		if num[1] == max_count:
+			modes.append(num[0])
+	return modes
 
 
 if __name__ == "__main__":
