@@ -136,7 +136,7 @@ if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
 
-	synapse = import_synapse("synapse_recoed/sample_synapse.txt")
+	synapse = import_synapse("synapse_record/sample_synapse.txt")
 
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
