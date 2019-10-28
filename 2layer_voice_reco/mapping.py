@@ -32,7 +32,7 @@ def winner_take_all(synapse, wave_file):
 		print(str(wave_file) + "  " + str(epoch))
 		
 		#音声データの読み込み
-		splited_sig_array, samplerate = wav_split(str(wave_file))
+		splited_sig_array, samplerate = wav_split(wave_file)
 		print(wave_file)
 
 		for signal in splited_sig_array:
@@ -68,7 +68,7 @@ def winner_take_all(synapse, wave_file):
 			#Leaky integrate and fire neuron dynamics
 			for time in time_array:
 				for second_layer_position, second_layer_neuron in enumerate(layer2):
-					active = []
+					active = []	
 					if(second_layer_neuron.t_rest < time):
 						second_layer_neuron.P = (second_layer_neuron.P 
 												+ np.dot(
@@ -102,96 +102,32 @@ def winner_take_all(synapse, wave_file):
 
 
 def max_index(list_data):
-	"""
-    リストデータの中の最大の値を示すindexを取得する
-
-    Parameters
-	----------
-	list : int list[any]
-		リストデータ
-
-	Returns
-	-------
-	int : 
-		最大値のindex
-    """
-
 	np_list_name = np.array(list_data)
 	return np_list_name.argmax()
 
 
 def extract_label(wav_file_name):
-	"""
-    音声データのパスからラベル部分を抽出する
-	ex : F1SYB08_ろ.wav → ろ
-
-    Parameters
-	----------
-	wav_file_name : (windows環境なら)WindowsPath
-		音声データのパス
-
-	Returns
-	-------
-	string : 
-		ラベル部分
-    """
-
 	wav_file_str = str(wav_file_name)
 	return wav_file_str[wav_file_str.find("_") + 1 : wav_file_str.find(".wav")]
 
 
 def mapping(mapping_list, neuron_potision, checked_wavfile):
-	"""
-	発火したニューロンの位置に適当する、対応付けリストの列に与えていた音声ファイルのラベルを挿入する
-
-	Parameters
-	----------
-	mapping_list : string list[kSecondLayerNuerons_]
-		対応付けを記すリスト
-	
-	neuron_potision : int
-		発火したニューロン
-
-	checked_wavfile : string
-		現在SNNに与えていたwavfileのパス
-
-	Returns
-	------
-	mapping_list : string list[kSecondLayerNuerons_]
-		対応付けを記すリスト
-	"""
-	
 	mapping_list[neuron_potision].append(extract_label(checked_wavfile))
 	return mapping_list
 
 
 def calculate_mode(list_data):
-	"""
-	最も発火数の多かったニューロンを返す。複数ある場合は全て返す。
+    c = Counter(list_data)
+    # すべての要素とその出現回数を取り出します。
+    freq_scores = c.most_common()
+    #c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
+    max_count = freq_scores[0][1]
 
-	Parameters
-	----------
-	list_data : int list[6]
-		マッピングに使った6人の発火したニューロン
-
-	Returns
-	-------
-	modes : int list[any]
-		最も発火したニューロンのリスト
-
-	"""
-
-	c = Counter(list_data)
-	# すべての要素とその出現回数を取り出します。
-	freq_scores = c.most_common()
-	#c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
-	max_count = freq_scores[0][1]
-
-	modes = []
-	for num in freq_scores:
-		if num[1] == max_count:
-			modes.append(num[0])
-	return modes
+    modes = []
+    for num in freq_scores:
+        if num[1] == max_count:
+            modes.append(num[0])
+    return modes
 
 
 if __name__ == "__main__":
@@ -200,7 +136,7 @@ if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
 
-	synapse = import_synapse("synapse_record/sample_synapse.txt")
+	synapse = import_synapse("synapse_recoed/sample_synapse.txt")
 
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
