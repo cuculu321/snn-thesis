@@ -29,11 +29,11 @@ def winner_take_all(synapse, wave_file):
 	neuron_spiked = np.zeros(par.kSecondLayerNuerons_)
 
 	for epoch in range(1):
-		print(str(wave_file) + "  " + str(epoch))
+		resemble_print(str(wave_file) + "  " + str(epoch))
 		
 		#音声データの読み込み
 		splited_sig_array, samplerate = wav_split(str(wave_file))
-		print(wave_file)
+		resemble_print(wave_file)
 
 		for signal in splited_sig_array:
 			#Generating melspectrum
@@ -45,10 +45,10 @@ def winner_take_all(synapse, wave_file):
 			#calculating threshold value for the image
 			var_threshold = threshold(spike_train)
 
-			# print var_threshold
+			# resemble_print var_threshold
 			# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
 			# var_threshold = 9
-			# print var_threshold
+			# resemble_print var_threshold
 			# var_D = (var_threshold*3)*0.07
 			
 			var_D = 0.15 * par.kScale_
@@ -75,7 +75,7 @@ def winner_take_all(synapse, wave_file):
 													synapse[second_layer_position], spike_train[:, time]
 												)
 												)
-						#print("synapse : " + str(synapse[second_layer_position]))
+						#resemble_print("synapse : " + str(synapse[second_layer_position]))
 						if(second_layer_neuron.P > par.kPrest_):
 							second_layer_neuron.P -= var_D
 						active_potential[second_layer_position] = second_layer_neuron.P
@@ -90,13 +90,13 @@ def winner_take_all(synapse, wave_file):
 						winner_neuron = np.argmax(active_potential)
 						img_win = winner_neuron
 						neuron_spiked[winner_neuron] += 1
-						print("winner is " + str(winner_neuron))
+						resemble_print("winner is " + str(winner_neuron))
 						for s in range(par.kSecondLayerNuerons_):
 							if(s != winner_neuron):
 								layer2[s].P = par.kMinPotential_
 	
 	#勝ったニューロンの特定
-	print("win neuron : " + str(max_index(neuron_spiked)))
+	resemble_print("win neuron : " + str(max_index(neuron_spiked)))
 
 	return max_index(neuron_spiked)
 
@@ -213,14 +213,14 @@ if __name__ == "__main__":
 
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_list, 6)
-		print(use_speakers)
+		resemble_print(use_speakers)
 		secondhand_wav_file.append(use_speakers)
 		winner_neurons = []
 		for speaker in use_speakers:
-			print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
 			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
 	
 		neuron_mode = calculate_mode(winner_neurons)
-		print(neuron_mode[0])
+		resemble_print(neuron_mode[0])
 		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
-		print(mapping_list)
+		resemble_print(mapping_list)
