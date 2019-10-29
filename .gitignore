@@ -6,4 +6,5 @@
 *.wav
 *.pyc
 *.txt
+*.csv
 Pipfile.lock
