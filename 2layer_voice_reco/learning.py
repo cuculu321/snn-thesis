@@ -63,9 +63,12 @@ def learning():
 
 				#Generating spike train
 				spike_train = np.array(encode(np.log10(mel_spectrum)))
+				spike_train_large = np.concatenate([spike_train, spike_train, spike_train, spike_train, spike_train
+													, spike_train, spike_train, spike_train, spike_train, spike_train])
+
 
 				#calculating threshold value for the image
-				var_threshold = threshold(spike_train)
+				var_threshold = threshold(spike_train_large)
 
 				# resemble_print var_threshold
 				# synapse_act = np.zeros((par.kSecondLayerNuerons_,par.kFirstLayerNuerons_))
@@ -94,7 +97,7 @@ def learning():
 						if(second_layer_neuron.t_rest < time):
 							second_layer_neuron.P = (second_layer_neuron.P 
 													+ np.dot(
-														synapse[second_layer_position], spike_train[:, time]
+														synapse[second_layer_position], spike_train_large[:, time]
 													)
 													)
 							#resemble_print("synapse : " + str(synapse[second_layer_position]))
@@ -126,7 +129,7 @@ def learning():
 								#前シナプスの計算
 								for back_time in range(-2, par.kTimeBack_-1, -1): #-2 → -20
 									if 0 <= time + back_time < par.kTime_ + 1:
-										if spike_train[first_layer_position][time + back_time] == 1:
+										if spike_train_large[first_layer_position][time + back_time] == 1:
 											# resemble_print "weight change by" + str(update(synapse[j][h], rl(t1)))
 											synapse[second_layer_position][first_layer_position] = update(
 												synapse[second_layer_position][first_layer_position], rl(back_time)
@@ -135,7 +138,7 @@ def learning():
 								#後シナプスの計算
 								for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
 									if 0 <= time + fore_time<par.kTime_+1:
-										if spike_train[first_layer_position][time + fore_time] == 1:
+										if spike_train_large[first_layer_position][time + fore_time] == 1:
 											# resemble_print "weight change by" + str(update(synapse[j][h], rl(t1)))
 											synapse[second_layer_position][first_layer_position] = update(
 												synapse[second_layer_position][first_layer_position], rl(fore_time)
@@ -145,7 +148,7 @@ def learning():
 
 				if(img_win!=100):
 					for first_layer_position in range(par.kFirstLayerNuerons_):
-						if sum(spike_train[first_layer_position]) == 0:
+						if sum(spike_train_large[first_layer_position]) == 0:
 							synapse[img_win][first_layer_position] -= 0.06 * par.kScale_
 							if(synapse[img_win][first_layer_position]<par.kMinWait_):
 								synapse[img_win][first_layer_position] = par.kMinWait_
