@@ -5,6 +5,7 @@ from spike_train import encode
 from parameters import param as par
 from var_th import threshold
 
+from console_write import *
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import wav_split
 
@@ -134,9 +135,12 @@ if __name__ == "__main__":
 	from record_synapse import *
 
 	import random
+	import sys
 	from get_current_directory import get_mappingfile_path
 
-	synapse = import_synapse("synapse_recoed/sample_synapse.txt")
+	args = sys.argv
+	input_synaps = args[1]
+	synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
 
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
