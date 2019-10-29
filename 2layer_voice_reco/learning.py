@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
 	resemble_print("synapse : ")
 	resemble_print(synapse)
-	export_txt(synapse, create_timestamp())
+	export_txt(synapse, "synapse_record/" + create_timestamp())
 
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
