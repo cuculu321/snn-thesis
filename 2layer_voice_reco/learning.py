@@ -8,6 +8,7 @@
 #####################################################################################################################################
 
 import numpy as np
+import cupy as cp
 from neuron import neuron
 import random
 from matplotlib import pyplot as plt
