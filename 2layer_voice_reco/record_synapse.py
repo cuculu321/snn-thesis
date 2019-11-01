@@ -1,7 +1,7 @@
 from datetime import datetime
 
-def export_txt(target_list, output_name):
-	save_path = "synapse_recoed/" + output_name + ".txt"
+def export_txt(target_list, output_path):
+	save_path = output_path + ".txt"
 	
 	with open(save_path, mode = 'w') as save_file:
 		for layer_synapse in target_list:
@@ -50,5 +50,5 @@ def list_str2float(list_str):
 
 
 if __name__ == "__main__":
-	synapse = import_synapse("synapse_recoed/sample_synapse.txt")
+	synapse = import_synapse("synapse_record/sample_synapse.txt")
 	#export_txt(synapse, create_timestamp())

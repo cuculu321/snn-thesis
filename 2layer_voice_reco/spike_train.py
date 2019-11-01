@@ -79,6 +79,6 @@ if __name__  == '__main__':
 		print("page: " + str(page))
 		print(np.log10(mel_spectrum))
 
-		export_txt(train, "trainF1AES2が")
+		export_txt(train, "spike_train/trainF1AES2が")
 
 	print("All Encoding")

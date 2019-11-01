@@ -21,7 +21,7 @@ def get_learningfile_path():
     return path_wavefile
 
 
-def get_learning_samll_file_path():
+def get_learning_small_file_path():
     """
     学習に使う音声ファイルのパスを取得する
 
