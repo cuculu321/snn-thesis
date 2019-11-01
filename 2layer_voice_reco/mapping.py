@@ -1,4 +1,5 @@
 import numpy as np
+import cupy as cp
 from neuron import neuron
 import random
 from spike_train import encode
@@ -42,7 +43,7 @@ def winner_take_all(synapse, wave_file):
 
                         #Generating spike train
                         spike_train = np.array(encode(np.log10(mel_spectrum)))
-
+                        spike_train_GPU = cp.asarray(spike_train)
                         #calculating threshold value for the image
                         var_threshold = threshold(spike_train)
 
@@ -72,8 +73,8 @@ def winner_take_all(synapse, wave_file):
                                         active = []
                                         if(second_layer_neuron.t_rest < time):
                                                 second_layer_neuron.P = (second_layer_neuron.P
-                                                                                                + np.dot(
-                                                                                                        synapse[second_layer_position], spike_train[:, time]
+                                                                                                + cp.dot(
+                                                                                                        synapse[second_layer_position], spike_train_GPU[:, time]
                                                                                                 )
                                                                                                 )
                                                 #resemble_print("synapse : " + str(synapse[second_layer_position]))
@@ -141,6 +142,7 @@ if __name__ == "__main__":
         args = sys.argv
         input_synaps = args[1]
         synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
+        synapse_GUI = cp.asarray(synapse)
 
         secondhand_wav_file = []
         speaker_list = [i for i in range(0, 12)]
@@ -158,7 +160,7 @@ if __name__ == "__main__":
                 winner_neurons = []
                 for speaker in use_speakers:
                         resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
-                        winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
+                        winner_neurons.append(winner_take_all(synapse_GUI, mapping_path[speaker][syllable_num]))
 
                 neuron_mode = calculate_mode(winner_neurons)
                 resemble_print(neuron_mode[0])
