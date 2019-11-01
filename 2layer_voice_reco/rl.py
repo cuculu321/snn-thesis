@@ -6,7 +6,7 @@
 
 
 
-import numpy as np
+import cupy as cp
 from matplotlib import pyplot as plt
 from parameters import param as par
 
@@ -27,10 +27,10 @@ def rl(t):
         """
         #back time
         if t > 0:
-                return -par.kNegativeReinforcement_ * np.exp(-float(t) / par.kNegativeTau_)
+                return -par.kNegativeReinforcement_ * cp.exp(-float(t) / par.kNegativeTau_)
         #fore time
         if t <= 0:
-                return par.kPositiveReinforcement_ * np.exp(float(t) / par.kPositiveTau_)
+                return par.kPositiveReinforcement_ * cp.exp(float(t) / par.kPositiveTau_)
 
 
 #STDP weight update rule
