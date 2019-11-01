@@ -7,12 +7,12 @@ def wav_split(file_name):
     音声データを0.04秒ごと、オーバーラップ50%で分割する
 
     Parameters
-	----------
-	file_name : string
+        ----------
+        file_name : string
         音声ファイルのパス
 
-	Returns
-	-------
+        Returns
+        -------
     sig_data_array : list[float]
         0.04秒ごとオーバーラップ50％で分割された音声データのリスト
     samplerate : int

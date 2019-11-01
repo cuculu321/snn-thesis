@@ -53,7 +53,7 @@ def get_mappingfile_path():
 
     path_PASLDSR = pathlib.Path('sounddata')
 
-    path_speaker = list(path for path in path_PASLDSR.iterdir() 
+    path_speaker = list(path for path in path_PASLDSR.iterdir()
                                     if not "DS_Store" in str(path))
 
     path_wavefile = []
