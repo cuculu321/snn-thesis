@@ -135,7 +135,6 @@ def learning():
                                                                                         synapse_GPU[second_layer_position][first_layer_position] = update(
                                                                                                 synapse_GPU[second_layer_position][first_layer_position], rl(back_time)
                                                                                                 )
-                                                                                        resemble_print("back : " + str(second_layer_position) + "-" + str(first_layer_position))
                                                                 #後シナプスの計算
                                                                 for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
                                                                         if 0 <= time + fore_time<par.kTime_+1:
@@ -144,7 +143,6 @@ def learning():
                                                                                         synapse_GPU[second_layer_position][first_layer_position] = update(
                                                                                                 synapse_GPU[second_layer_position][first_layer_position], rl(fore_time)
                                                                                                 )
-                                                                                        resemble_print("fron : " + str(second_layer_position) + "-" + str(first_layer_position))
 
                                 if(img_win!=100):
                                         for first_layer_position in range(par.kFirstLayerNuerons_):
