@@ -96,11 +96,11 @@ def learning():
                     for second_layer_position, second_layer_neuron in enumerate(layer2):
                         active = []
                         if(second_layer_neuron.t_rest < time):
-                                second_layer_neuron.P = (second_layer_neuron.P
-                                                        + np.dot(
-                                                            synapse_GPU[second_layer_position], spike_train_GPU[:, time]
-                                                            )
-                                                        )
+                            second_layer_neuron.P = (second_layer_neuron.P
+                                                    + np.dot(
+                                                        synapse[second_layer_position], spike_train[:, time]
+                                                    )
+                                                    )
                             #resemble_print("synapse : " + str(synapse[second_layer_position]))
                             if(second_layer_neuron.P > par.kPrest_):
                                 second_layer_neuron.P -= var_D
