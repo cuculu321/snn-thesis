@@ -11,9 +11,9 @@ from matplotlib import pyplot as plt
 from parameters import param as par
 
 #STDP reinforcement learning curve
-def rl(t):
+def back_rl(t):
     """
-    スパイク間隔の時間
+    スパイク間隔の時間(時差)
 
     Parameters
     ----------
@@ -23,18 +23,19 @@ def rl(t):
     Returns
     ------
     : float
-            一般的なSTDP機能で得られる値
+            時差
     """
     #back time
-    if t > 0:
-        return -par.kNegativeReinforcement_ * cp.exp(-float(t) / par.kNegativeTau_)
+    return par.kPositiveReinforcement_ * cp.exp(float(t) / par.kPositiveTau_)
+
+
+def fore_rl(t):
     #fore time
-    if t <= 0:
-        return par.kPositiveReinforcement_ * cp.exp(float(t) / par.kPositiveTau_)
+    return -par.kNegativeReinforcement_ * cp.exp(-float(t) / par.kNegativeTau_)
 
 
 #STDP weight update rule
-def update(w, del_w):
+def positive_update(w, del_w):
     """
     STDP則に基づく重みの更新
 
@@ -43,16 +44,20 @@ def update(w, del_w):
     w : float
             更新が行われるシナプスの値
     del_w : float
-            SDTPによって導き出された値
+            スパイクの時差
 
     Returns
     ------
     : 新しく更新される値
     """
-    if del_w < 0:
-        return w + par.kSigma_ * del_w * (w - abs(par.kMinWait_)) * par.kScale_
-    elif del_w > 0:
-        return w + par.kSigma_ * del_w * (par.kMaxWait_ - w) * par.kScale_
+    #時差が負、foretime
+    return w + par.kSigma_ * del_w * (w - abs(par.kMinWait_)) * par.kScale_
+
+def negative_update(w, del_w):
+    #時差が正、backtime
+    return w + par.kSigma_ * del_w * (par.kMaxWait_ - w) * par.kScale_
+
+
 
 if __name__ == '__main__':
 

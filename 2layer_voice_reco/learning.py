@@ -13,8 +13,7 @@ from neuron import neuron
 import random
 from matplotlib import pyplot as plt
 from spike_train import encode
-from rl import rl
-from rl import update
+from rl import *
 from parameters import param as par
 from var_th import threshold
 
@@ -127,21 +126,19 @@ def learning():
                                 second_layer_neuron.t_rest = time + second_layer_neuron.t_ref
                                 second_layer_neuron.P = par.kPrest_
                                 for first_layer_position in range(par.kFirstLayerNuerons_):
-                                    #前シナプスの計算
                                     for back_time in range(-2, par.kTimeBack_-1, -1): #-2 → -20
                                         if 0 <= time + back_time < par.kTime_ + 1:
                                             if spike_train_GPU[first_layer_position][time + back_time] == 1:
                                                 # resemble_print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                                synapse_GPU[second_layer_position][first_layer_position] = update(
-                                                        synapse_GPU[second_layer_position][first_layer_position], rl(back_time)
+                                                synapse_GPU[second_layer_position][first_layer_position] = negative_update(
+                                                        synapse_GPU[second_layer_position][first_layer_position], back_rl(back_time)
                                                         )
-                                    #後シナプスの計算
                                     for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
                                         if 0 <= time + fore_time<par.kTime_+1:
                                             if spike_train_GPU[first_layer_position][time + fore_time] == 1:
                                                 # resemble_print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                                synapse_GPU[second_layer_position][first_layer_position] = update(
-                                                        synapse_GPU[second_layer_position][first_layer_position], rl(fore_time)
+                                                synapse_GPU[second_layer_position][first_layer_position] = positive_update(
+                                                        synapse_GPU[second_layer_position][first_layer_position], fore_rl(fore_time)
                                                         )
 
                     if(img_win!=100):
