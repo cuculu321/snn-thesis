@@ -161,6 +161,7 @@ if __name__ == "__main__":
     potential_lists, synapse, layer2 = learning()
 
     resemble_print("synapse : ")
+    np.set_printoptions(threshold=np.inf)
     resemble_print(synapse)
     export_txt(synapse, "synapse_record/" + create_timestamp())
 
