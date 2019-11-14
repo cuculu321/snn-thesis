@@ -9,3 +9,5 @@
 Pipfile.lock
 *.out
 *.csv
+
+*.DS_Store
