@@ -9,8 +9,9 @@ scipy = "*"
 matplotlib = "*"
 soundfile = "*"
 "pyqt5" = "*"
+cupy-cuda100 = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
