@@ -34,7 +34,7 @@ def get_learning_small_file_path():
     """
 
     path_PASLDSR = pathlib.Path('PASL-DSR')
-    path_wavefile = list(path for path in path_PASLDSR.glob('**/**/*.wav')
+    path_wavefile = list(path for path in path_PASLDSR.glob('WAVES/**/*.wav')
                                 if "HIN" in str(path))
     return path_wavefile
 
@@ -53,7 +53,7 @@ def get_mappingfile_path():
 
     path_PASLDSR = pathlib.Path('sounddata')
 
-    path_speaker = list(path for path in path_PASLDSR.iterdir() 
+    path_speaker = list(path for path in path_PASLDSR.iterdir()
                                     if not "DS_Store" in str(path))
 
     path_wavefile = []
