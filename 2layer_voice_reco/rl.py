@@ -28,7 +28,6 @@ def back_rl(t):
     #back time
     return par.kPositiveReinforcement_ * cp.exp(float(t) / par.kPositiveTau_)
 
-
 def fore_rl(t):
     #fore time
     return -par.kNegativeReinforcement_ * cp.exp(-float(t) / par.kNegativeTau_)
@@ -58,7 +57,6 @@ def negative_update(w, del_w):
     return w + par.kSigma_ * del_w * (par.kMaxWait_ - w) * par.kScale_
 
 
-
 if __name__ == '__main__':
 
-    print(rl(-20) * par.kSigma_)
+    print(back_rl(-20) * par.kSigma_)
