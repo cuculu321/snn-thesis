@@ -123,15 +123,19 @@ def get_log_melspectrum(signal, samplerate):
 
 if __name__ == '__main__':
     from wav_split import wav_split
+    import time
     splited_sig_array, samplerate = wav_split("sounddata/F1/F1SYB01_a.wav")
     signal = splited_sig_array[int(len(splited_sig_array)/2)]
 
+    start = time.time()
     f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+    print("time :" + str(time.time() - start))
     # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
+    """
     plt.figure(figsize=(13, 5))
-
     plt.plot(f_centers, 10 * np.log10(mel_spectrum), "o-", label='Mel Spectrum')
     plt.xlabel("frequency[Hz]")
     plt.ylabel('Amplitude[dB]')
     plt.legend()
     plt.show()
+    """
