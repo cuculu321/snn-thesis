@@ -48,7 +48,7 @@ def learning():
 		for j in range(par.kFirstLayerNuerons_):
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
-	for epoch in range(1):
+	for epoch in range(50):
 		for wave_file in learning_path:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			resemble_print(str(wave_file) + "  " + str(epoch))
@@ -131,7 +131,7 @@ def learning():
 											synapse[second_layer_position][first_layer_position] = update(
 												synapse[second_layer_position][first_layer_position], rl(back_time)
 												)
-											resemble_print("back : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
+											#resemble_print("back : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
 								#後シナプスの計算
 								for fore_time in range(2, par.kTimeFore_+1, 1): # 2 → 20
 									if 0 <= time + fore_time<par.kTime_+1:
@@ -140,7 +140,7 @@ def learning():
 											synapse[second_layer_position][first_layer_position] = update(
 												synapse[second_layer_position][first_layer_position], rl(fore_time)
 												)
-											resemble_print("fron : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
+											#resemble_print("fron : " + str(second_layer_position) + "-" + str(first_layer_position) + " : " + str(synapse[second_layer_position][first_layer_position]))
 
 
 				if(img_win!=100):
