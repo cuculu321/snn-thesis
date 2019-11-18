@@ -33,6 +33,25 @@ def wav_split(file_name):
 
     return sig_data_array, samplerate
 
+def time_dependebt_wavsplit(file_name):
+    """
+    単音節の音声データを14要素に分割する。オーバーラップ50％もいれる。
+
+    Parameters
+    ----------
+    file_name : string
+    音声ファイルのパス
+
+	Returns
+	-------
+    sig_data_array : list[float]
+        14分割し、オーバーラップ50％で分割された音声データのリスト
+    samplerate : int
+        音声データのサンプルレート
+    """
+        
+
+
 if __name__ == '__main__':
     splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/AES/F1AES2.wav")
 
