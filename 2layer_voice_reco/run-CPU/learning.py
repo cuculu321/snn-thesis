@@ -42,14 +42,15 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_learning_small_file_path()
+	learning_path = get_mappingfile_path()
+	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 	for epoch in range(1):
-		for wave_file in learning_path:
+		for wave_file in [speaker for speaker in learning_path]:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			resemble_print(str(wave_file) + "  " + str(epoch))
 			
