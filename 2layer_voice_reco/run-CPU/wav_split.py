@@ -52,7 +52,7 @@ def time_dependent_wavsplit(file_name):
     """
 
     signal, samplerate = sf.read(file_name)
-    
+
     #音声データの再生時間
     sound_time = len(signal) / samplerate
     #14分割するときの1つ当たりの時間
