@@ -42,8 +42,8 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_mappingfile_path()
-	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
+	learning_path = get_vowel_path()
+	#learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
