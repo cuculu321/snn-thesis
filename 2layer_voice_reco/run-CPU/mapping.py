@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
 	import random
 	import sys
-	from get_current_directory import get_mappingfile_path
+	from get_current_directory import *
 
 	args = sys.argv
 	input_synaps = args[1]
@@ -145,9 +145,9 @@ if __name__ == "__main__":
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
 
-	mapping_list = [[] for _ in range(110)]
+	mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
 
-	mapping_path = get_mappingfile_path()
+	mapping_path = get_vowel_path()
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 
