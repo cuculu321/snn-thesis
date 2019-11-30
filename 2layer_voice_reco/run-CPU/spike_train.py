@@ -51,12 +51,8 @@ def encode(potential):
         train.append(time_list)
         #print(sum(time_list))
         #print("time_list  1 : " + str(l) + " m : " + str(m) + "   " + str(sum(time_list)))
-    connect_spike(train)
     return train
 
-
-def connect_spike(spike):
-    print(len(spike))
 
 if __name__  == '__main__':
 
@@ -72,16 +68,16 @@ if __name__  == '__main__':
 
     page = 0
     for signal in splited_sig_array:
-            page = page + 1
-        f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+        page = page + 1
+    f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
-        # for i in potential:
-        # 	m.append(max(i))
-        # 	n.append(min(i))
+    # for i in potential:
+    # 	m.append(max(i))
+    # 	n.append(min(i))
 
-        # print max(m), min(n)
-        train = encode(np.log10(mel_spectrum))
-        print("page: " + str(page))
-        print(np.log10(mel_spectrum))
-        export_txt(train, "spike_train/trainF1AES2が")
-        print("All Encoding")
+    # print max(m), min(n)
+    train = encode(np.log10(mel_spectrum))
+    print("page: " + str(page))
+    print(np.log10(mel_spectrum))
+    export_txt(train, "spike_train/trainF1AES2が")
+    print("All Encoding")
