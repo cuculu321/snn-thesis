@@ -12,7 +12,7 @@ class param:
 
 	kPixelX_ = 28
 	kPrest_ = 0
-	kFirstLayerNuerons_ = 220 #Number of neurons in first layer
+	kFirstLayerNuerons_ = 88 #Number of neurons in first layer
 	kSecondLayerNuerons_ =  5  #Number of neurons in second layer
 	kMinPotential_ = -500 * kScale_
 	# Pth = 5
