@@ -57,14 +57,10 @@ def learning():
 			#音声データの読み込み
 			splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
 			resemble_print(str(wave_file))
+			spike_train = wav_split2spike(splited_sig_array, samplerate)
+			spike_connected = np.array(connect_spike(spike_train))
 
-			for signal in splited_sig_array:
-				#Generating melspectrum
-				f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
-
-				#Generating spike train
-				spike_train = np.array(encode(np.log10(mel_spectrum)))
-
+			for spike_train in spike_connected:
 				#calculating threshold value for the image
 				var_threshold = threshold(spike_train)
 
@@ -152,6 +148,33 @@ def learning():
 								synapse[img_win][first_layer_position] = par.kMinWait_
 
 	return potential_lists, synapse, layer2
+
+
+def wav_split2spike(splited_sig_array, samplerate):
+	spike_train = []
+	for signal in splited_sig_array:
+
+		#Generating melspectrum
+		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+
+		#Generating spike train
+		spike_train.append(np.array(encode(np.log10(mel_spectrum))))
+
+	return spike_train
+
+
+def connect_spike(spike_train):
+	#頭を基に、後ろ4つのスパイクを連結
+	spike_connected = []
+	for i in range(0, len(spike_train) - 3, 2):
+		spike_connected_wip = []
+		spike_connected_wip.extend(spike_train[i])
+		spike_connected_wip.extend(spike_train[i+1])
+		spike_connected_wip.extend(spike_train[i+2])
+		spike_connected_wip.extend(spike_train[i+3])
+		spike_connected.append(spike_connected_wip)
+	
+	return spike_connected
 
 
 if __name__ == "__main__":
