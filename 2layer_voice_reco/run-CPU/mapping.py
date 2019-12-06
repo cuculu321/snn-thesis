@@ -7,7 +7,7 @@ from var_th import threshold
 
 from console_write import *
 from get_logmelspectrum import get_log_melspectrum
-from wav_split import wav_split
+from wav_split import *
 
 from collections import Counter
 
@@ -18,7 +18,7 @@ def winner_take_all(synapse, wave_file):
 		potential_lists.append([])
 
 	#time series 
-	time_array  = np.arange(1, par.kTime_+1, 1)
+	time_array	= np.arange(1, par.kTime_+1, 1)
 
 	layer2 = []
 
@@ -33,15 +33,19 @@ def winner_take_all(synapse, wave_file):
 		resemble_print(str(wave_file) + "  " + str(epoch))
 		
 		#音声データの読み込み
-		splited_sig_array, samplerate = wav_split(str(wave_file))
-		resemble_print(wave_file)
+		#splited_sig_array, samplerate = wav_split(str(wave_file))
+		#resemble_print(wave_file)
+		splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
+		resemble_print(str(wave_file))
+		spike_train = wav_split2spike(splited_sig_array, samplerate)
+		spike_connected = np.array(connect_spike(spike_train))
 
-		for signal in splited_sig_array:
+		for spike_train in spike_connected:
 			#Generating melspectrum
-			f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+			#f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
 			#Generating spike train
-			spike_train = np.array(encode(np.log10(mel_spectrum)))
+			#spike_train = np.array(encode(np.log10(mel_spectrum)))
 
 			#calculating threshold value for the image
 			var_threshold = threshold(spike_train)
@@ -69,7 +73,7 @@ def winner_take_all(synapse, wave_file):
 			#Leaky integrate and fire neuron dynamics
 			for time in time_array:
 				for second_layer_position, second_layer_neuron in enumerate(layer2):
-					active = []	
+					active = [] 
 					if(second_layer_neuron.t_rest < time):
 						second_layer_neuron.P = (second_layer_neuron.P 
 												+ np.dot(
@@ -118,25 +122,50 @@ def mapping(mapping_list, neuron_potision, checked_wavfile):
 
 
 def calculate_mode(list_data):
-    c = Counter(list_data)
-    # すべての要素とその出現回数を取り出します。
-    freq_scores = c.most_common()
-    #c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
-    max_count = freq_scores[0][1]
+	c = Counter(list_data)
+	# すべての要素とその出現回数を取り出します。
+	freq_scores = c.most_common()
+	#c.most_common内の最も多い要素[0]の最大出現回数[1]を[0][1]で指定
+	max_count = freq_scores[0][1]
 
-    modes = []
-    for num in freq_scores:
-        if num[1] == max_count:
-            modes.append(num[0])
-    return modes
+	modes = []
+	for num in freq_scores:
+		if num[1] == max_count:
+			modes.append(num[0])
+	return modes
 
+
+def wav_split2spike(splited_sig_array, samplerate):
+	spike_train = []
+	for signal in splited_sig_array:
+
+		#Generating melspectrum
+		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+
+		#Generating spike train
+		spike_train.append(np.array(encode(np.log10(mel_spectrum))))
+
+	return spike_train
+
+
+def connect_spike(spike_train):
+	#頭を基に、後ろ4つのスパイクを連結
+	spike_connected = []
+	for i in range(0, len(spike_train) - 3, 2):
+		spike_connected_wip = []
+		spike_connected_wip.extend(spike_train[i])
+		spike_connected_wip.extend(spike_train[i+1])
+		spike_connected_wip.extend(spike_train[i+2])
+		spike_connected_wip.extend(spike_train[i+3])
+
+	return spike_connected
 
 if __name__ == "__main__":
 	from record_synapse import *
 
 	import random
 	import sys
-	from get_current_directory import get_mappingfile_path
+	from get_current_directory import *
 
 	args = sys.argv
 	input_synaps = args[1]
@@ -145,9 +174,9 @@ if __name__ == "__main__":
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
 
-	mapping_list = [[] for _ in range(110)]
+	mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
 
-	mapping_path = get_mappingfile_path()
+	mapping_path = get_vowel_path()
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 

@@ -81,6 +81,28 @@ def get_testfile_path():
     return path_wavefile
 
 
+def get_vowel_path():
+    """
+    母音データのファイルパスを取得する
+    Parameters
+	----------
+
+	Returns
+	-------
+    母音の音声ファイルのパス
+    """
+    path_PASLDSR = pathlib.Path('sounddata-vowel')
+
+    path_speaker = list(path for path in path_PASLDSR.iterdir() 
+                                if not "DS_Store" in str(path))
+
+    path_wavefile = []
+    for speaker in path_speaker:
+        path_wavefile.append(list(path for path in speaker.glob('*.wav')))
+    
+    return path_wavefile
+
+
 if __name__ == "__main__":
-    filelist = get_mappingfile_path()
-    print(filelist[0][1])
+    filelist = get_vowel_path()
+    print(len(filelist[0]))

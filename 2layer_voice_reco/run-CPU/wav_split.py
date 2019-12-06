@@ -56,7 +56,7 @@ def time_dependent_wavsplit(file_name):
     #音声データの再生時間
     sound_time = len(signal) / samplerate
     #14分割するときの1つ当たりの時間
-    cuttime = sound_time / 14
+    cuttime = sound_time / 13
     overlap_time = cuttime / 2
     array_interval = overlap_time * samplerate
 

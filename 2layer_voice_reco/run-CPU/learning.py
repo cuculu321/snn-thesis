@@ -20,7 +20,7 @@ from var_th import threshold
 from console_write import *
 from get_current_directory import *
 from get_logmelspectrum import get_log_melspectrum
-from wav_split import wav_split
+from wav_split import *
 
 def learning():
 	#potentials of output neurons
@@ -42,28 +42,25 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_learning_small_file_path()
+	learning_path = get_vowel_path()
+	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 	for epoch in range(1):
-		for wave_file in learning_path:
+		for wave_file in [speaker for speaker in learning_path]:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			resemble_print(str(wave_file) + "  " + str(epoch))
 			
 			#音声データの読み込み
-			splited_sig_array, samplerate = wav_split(str(wave_file))
+			splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
 			resemble_print(str(wave_file))
+			spike_train = wav_split2spike(splited_sig_array, samplerate)
+			spike_connected = np.array(connect_spike(spike_train))
 
-			for signal in splited_sig_array:
-				#Generating melspectrum
-				f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
-
-				#Generating spike train
-				spike_train = np.array(encode(np.log10(mel_spectrum)))
-
+			for spike_train in spike_connected:
 				#calculating threshold value for the image
 				var_threshold = threshold(spike_train)
 
@@ -153,6 +150,33 @@ def learning():
 	return potential_lists, synapse, layer2
 
 
+def wav_split2spike(splited_sig_array, samplerate):
+	spike_train = []
+	for signal in splited_sig_array:
+
+		#Generating melspectrum
+		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+
+		#Generating spike train
+		spike_train.append(np.array(encode(np.log10(mel_spectrum))))
+
+	return spike_train
+
+
+def connect_spike(spike_train):
+	#頭を基に、後ろ4つのスパイクを連結
+	spike_connected = []
+	for i in range(0, len(spike_train) - 3, 2):
+		spike_connected_wip = []
+		spike_connected_wip.extend(spike_train[i])
+		spike_connected_wip.extend(spike_train[i+1])
+		spike_connected_wip.extend(spike_train[i+2])
+		spike_connected_wip.extend(spike_train[i+3])
+		spike_connected.append(spike_connected_wip)
+	
+	return spike_connected
+
+
 if __name__ == "__main__":
 	from record_synapse import *
 	import random
@@ -168,9 +192,9 @@ if __name__ == "__main__":
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
 
-	mapping_list = [[] for _ in range(110)]
+	mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
 
-	mapping_path = get_mappingfile_path()
+	mapping_path = get_vowel_path()
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 
