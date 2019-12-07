@@ -21,9 +21,9 @@ def wav_split(file_name):
     signal, samplerate = sf.read(file_name)
 
     # 音声波形を0.04毎、オーバーラップ50%で切り出す
-    time_interval = 0.02 #オーバーラップ50%なので0.02秒ごと
-    cuttime = 0.04 #ポイント前後0.02秒合計0.04秒
-    array_interval = 0.02 * samplerate #0.02秒間隔を配列間隔に
+    cuttime = 0.06 #ポイント前後0.02秒合計0.04秒
+    time_interval = cuttime / 2 #オーバーラップ50%なので0.02秒ごと
+    array_interval = time_interval * samplerate #0.02秒間隔を配列間隔に
     cutpoint = np.arange(array_interval, len(signal) - array_interval, array_interval) #0.02秒ごとのポイント切り出し
 
     sig_data_array = []

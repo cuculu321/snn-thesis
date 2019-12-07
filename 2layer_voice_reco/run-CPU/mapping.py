@@ -17,7 +17,7 @@ def winner_take_all(synapse, wave_file):
     for i in range(par.kSecondLayerNuerons_):
         potential_lists.append([])
 
-    #time series 
+    #time series
     time_array  = np.arange(1, par.kTime_+1, 1)
 
     layer2 = []
@@ -31,11 +31,10 @@ def winner_take_all(synapse, wave_file):
 
     for epoch in range(1):
         resemble_print(str(wave_file) + "  " + str(epoch))
-        
         #音声データの読み込み
         #splited_sig_array, samplerate = wav_split(str(wave_file))
         #resemble_print(wave_file)
-        splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
+        splited_sig_array, samplerate = wav_split(str(wave_file))
         resemble_print(str(wave_file))
         spike_train = wav_split2spike(splited_sig_array, samplerate)
         spike_connected = np.array(connect_spike(spike_train))
@@ -55,7 +54,7 @@ def winner_take_all(synapse, wave_file):
             # var_threshold = 9
             # resemble_print var_threshold
             # var_D = (var_threshold*3)*0.07
-            
+            #
             var_D = 0.15 * par.kScale_
 
             for x in layer2:
@@ -63,7 +62,7 @@ def winner_take_all(synapse, wave_file):
 
             #flag for lateral inhibition
             flag_spike = 0
-            
+
             img_win = 100
 
             active_potential = []
@@ -73,9 +72,9 @@ def winner_take_all(synapse, wave_file):
             #Leaky integrate and fire neuron dynamics
             for time in time_array:
                 for second_layer_position, second_layer_neuron in enumerate(layer2):
-                    active = [] 
+                    active = []
                     if(second_layer_neuron.t_rest < time):
-                        second_layer_neuron.P = (second_layer_neuron.P 
+                        second_layer_neuron.P = (second_layer_neuron.P
                                                 + np.dot(
                                                     synapse[second_layer_position], spike_train[:, time]
                                                 )
@@ -84,7 +83,7 @@ def winner_take_all(synapse, wave_file):
                         if(second_layer_neuron.P > par.kPrest_):
                             second_layer_neuron.P -= var_D
                         active_potential[second_layer_position] = second_layer_neuron.P
-                    
+
                     potential_lists[second_layer_position].append(second_layer_neuron.P)
 
                 # Lateral Inhibition
@@ -99,7 +98,6 @@ def winner_take_all(synapse, wave_file):
                         for s in range(par.kSecondLayerNuerons_):
                             if(s != winner_neuron):
                                 layer2[s].P = par.kMinPotential_
-    
     #勝ったニューロンの特定
     resemble_print("win neuron : " + str(max_index(neuron_spiked)))
 
@@ -188,7 +186,7 @@ if __name__ == "__main__":
         for speaker in use_speakers:
             resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
             winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
-    
+
         neuron_mode = calculate_mode(winner_neurons)
         resemble_print(neuron_mode[0])
         mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
