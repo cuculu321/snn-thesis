@@ -10,6 +10,7 @@ from get_logmelspectrum import get_log_melspectrum
 from wav_split import *
 
 from collections import Counter
+from learning import *
 
 def winner_take_all(synapse, wave_file):
 	#potentials of output neurons
@@ -134,31 +135,6 @@ def calculate_mode(list_data):
 			modes.append(num[0])
 	return modes
 
-
-def wav_split2spike(splited_sig_array, samplerate):
-	spike_train = []
-	for signal in splited_sig_array:
-
-		#Generating melspectrum
-		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
-
-		#Generating spike train
-		spike_train.append(np.array(encode(np.log10(mel_spectrum))))
-
-	return spike_train
-
-
-def connect_spike(spike_train):
-	#頭を基に、後ろ4つのスパイクを連結
-	spike_connected = []
-	for i in range(0, len(spike_train) - 3, 2):
-		spike_connected_wip = []
-		spike_connected_wip.extend(spike_train[i])
-		spike_connected_wip.extend(spike_train[i+1])
-		spike_connected_wip.extend(spike_train[i+2])
-		spike_connected_wip.extend(spike_train[i+3])
-
-	return spike_connected
 
 if __name__ == "__main__":
 	from record_synapse import *
