@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from parameters import param as par
-
+import scipy.stats
 
 def get_amplitude_spectrum(signal, samplerate, N):
     """
@@ -118,14 +118,14 @@ def get_log_melspectrum(signal, samplerate):
 
 if __name__ == '__main__':
     from wav_split import wav_split
-    splited_sig_array, samplerate = wav_split("a_1.wav")
+    splited_sig_array, samplerate = wav_split("sounddata-vowel/F1/F1SYB01_a.wav")
     signal = splited_sig_array[int(len(splited_sig_array)/2)]
 
     f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
     # 元の振幅スペクトルとフィルタバンクをかけて圧縮したスペクトルを表示
     plt.figure(figsize=(13, 5))
-
-    plt.plot(f_centers, 10 * np.log10(mel_spectrum), "o-", label='Mel Spectrum')
+    #plt.plot(f_centers, scipy.stats.zscore(mel_spectrum), "o-", label='Mel Spectrum')
+    plt.plot(f_centers, np.log10(mel_spectrum), "o-", label='Mel Spectrum')
     plt.xlabel("frequency[Hz]")
     plt.ylabel('Amplitude[dB]')
     plt.legend()

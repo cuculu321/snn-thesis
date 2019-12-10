@@ -158,7 +158,7 @@ def wav_split2spike(splited_sig_array, samplerate):
 		f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
 		#Generating spike train
-		spike_train.append(np.array(encode(np.log10(mel_spectrum))))
+		spike_train.append(np.array(encode(10 * np.log10(mel_spectrum))))
 
 	return spike_train
 
