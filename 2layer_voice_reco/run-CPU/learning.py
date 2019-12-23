@@ -92,7 +92,7 @@ def learning():
 							second_layer_neuron.P = (second_layer_neuron.P 
 													+ np.dot(
 														synapse[second_layer_position], spike_train[:, time]
-													)
+														)
 													)
 							#resemble_print("synapse : " + str(synapse[second_layer_position]))
 							if(second_layer_neuron.P > par.kPrest_):
@@ -117,6 +117,7 @@ def learning():
 					for second_layer_position, second_layer_neuron in enumerate(layer2):
 						neuron_status = second_layer_neuron.check()
 						if(neuron_status == 1):
+							resemble_print("fire neuron: " + str(second_layer_position))
 							second_layer_neuron.t_rest = time + second_layer_neuron.t_ref
 							second_layer_neuron.P = par.kPrest_
 							for first_layer_position in range(par.kFirstLayerNuerons_):
