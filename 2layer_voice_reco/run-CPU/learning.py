@@ -58,9 +58,11 @@ def learning():
 			splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
 			resemble_print(str(wave_file))
 			spike_train = wav_split2spike(splited_sig_array, samplerate)
-			spike_connected = np.array(connect_spike(spike_train))
-
-			for spike_train in spike_connected:
+			
+			#スパイクの連結の場合は下2行をコメントアウトし、Tabを修正する
+			#spike_connected = np.array(connect_spike(spike_train))
+			for spike_train in spike_train:
+				
 				#calculating threshold value for the image
 				var_threshold = threshold(spike_train)
 
