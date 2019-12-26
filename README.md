@@ -1,5 +1,10 @@
 # Spiking Neural Networkについての卒論
 
+## このブランチについての説明
+se,shi | n | other
+に分類できます
+
+
 ## コーディングルール
 ---
 
