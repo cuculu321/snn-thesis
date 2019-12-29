@@ -20,7 +20,7 @@ from var_th import threshold
 from console_write import *
 from get_current_directory import *
 from get_logmelspectrum import get_log_melspectrum
-from wav_split import wav_split
+from wav_split import *
 
 def learning():
 	#potentials of output neurons
@@ -42,7 +42,8 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_learning_small_file_path()
+	learning_path = get_mappingfile_path()
+	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
@@ -54,7 +55,7 @@ def learning():
 			resemble_print(str(wave_file) + "  " + str(epoch))
 			
 			#音声データの読み込み
-			splited_sig_array, samplerate = wav_split(str(wave_file))
+			splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
 			resemble_print(str(wave_file))
 
 			for signal in splited_sig_array:
