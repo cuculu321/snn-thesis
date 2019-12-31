@@ -33,7 +33,7 @@ def winner_take_all(synapse, wave_file):
 		resemble_print(str(wave_file) + "  " + str(epoch))
 		
 		#音声データの読み込み
-		splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
+		splited_sig_array, samplerate = wav_split(str(wave_file))
 		resemble_print(wave_file)
 
 		for signal in splited_sig_array:
