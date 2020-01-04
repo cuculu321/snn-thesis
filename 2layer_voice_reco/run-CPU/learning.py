@@ -42,7 +42,7 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_mappinfile_path()
+	learning_path = get_mappingfile_path()
 	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
@@ -68,7 +68,6 @@ def learning():
 
 				#Generating spike train
 				spike_train = np.array(encode(np.log10(mel_spectrum)))
-
 
 				#calculating threshold value for the image
 				var_threshold = threshold(spike_train)
