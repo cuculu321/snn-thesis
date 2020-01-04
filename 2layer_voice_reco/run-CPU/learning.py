@@ -42,7 +42,7 @@ def learning():
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 
 	#get wavefile path for learning
-	learning_path = get_vowel_path()
+	learning_path = get_mappinfile_path()
 	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
@@ -50,17 +50,26 @@ def learning():
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 
 	for epoch in range(1):
-		for wave_file in [speaker for speaker in learning_path]:
+		for wave_file in learning_path:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			resemble_print(str(wave_file) + "  " + str(epoch))
 			
 			#音声データの読み込み
 			splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
 			resemble_print(str(wave_file))
-			spike_train = wav_split2spike(splited_sig_array, samplerate)
-			spike_connected = np.array(connect_spike(spike_train))
+			
+			#スパイクの連結
+			#spike_train = wav_split2spike(splited_sig_array, samplerate)
+			#spike_connected = np.array(connect_spike(spike_train))
+			#for spike_train in spike_connected:
+			for signal in splited_sig_array:
+				#Generating melspectrum
+				f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
-			for spike_train in spike_connected:
+				#Generating spike train
+				spike_train = np.array(encode(np.log10(mel_spectrum)))
+
+
 				#calculating threshold value for the image
 				var_threshold = threshold(spike_train)
 
@@ -194,7 +203,7 @@ if __name__ == "__main__":
 
 	mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
 
-	mapping_path = get_vowel_path()
+	mapping_path = get_mappingfile_path()
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 
