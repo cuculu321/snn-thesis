@@ -36,17 +36,21 @@ def winner_take_all(synapse, wave_file):
 		#音声データの読み込み
 		#splited_sig_array, samplerate = wav_split(str(wave_file))
 		#resemble_print(wave_file)
-		splited_sig_array, samplerate = time_dependent_wavsplit(str(wave_file))
+		splited_sig_array, samplerate = wav_split(str(wave_file))
 		resemble_print(str(wave_file))
-		spike_train = wav_split2spike(splited_sig_array, samplerate)
-		spike_connected = np.array(connect_spike(spike_train))
 
-		for spike_train in spike_connected:
+		#スパイクの連結
+		#spike_train = wav_split2spike(splited_sig_array, samplerate)
+		#spike_connected = np.array(connect_spike(spike_train))
+		#for spike_train in spike_connected:
+
+		for signal in splited_sig_array:
+
 			#Generating melspectrum
-			#f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
+			f_centers, mel_spectrum = get_log_melspectrum(signal, samplerate)
 
 			#Generating spike train
-			#spike_train = np.array(encode(np.log10(mel_spectrum)))
+			spike_train = np.array(encode(np.log10(mel_spectrum)))
 
 			#calculating threshold value for the image
 			var_threshold = threshold(spike_train)
@@ -152,7 +156,7 @@ if __name__ == "__main__":
 
 	mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
 
-	mapping_path = get_vowel_path()
+	mapping_path = get_mappingfile_path()
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 
