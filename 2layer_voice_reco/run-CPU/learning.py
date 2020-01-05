@@ -24,7 +24,7 @@ from wav_split import *
 from record_synapse import *
 
 
-def learning():
+def learning(learning_path):
 	#potentials of output neurons
 	potential_lists = []
 	for i in range(par.kSecondLayerNuerons_):
@@ -42,10 +42,6 @@ def learning():
 
 	#synapse matrix	initialization
 	synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
-
-	#get wavefile path for learning
-	learning_path = get_mappingfile_path()
-	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
@@ -194,12 +190,18 @@ if __name__ == "__main__":
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
 
-	potential_lists, synapse, layer2 = learning()
+	#学習
+	#get wavefile path for learning
+	learning_path = get_mappingfile_path()
+	learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
+
+	potential_lists, synapse, layer2 = learning(learning_path)
 
 	resemble_print("synapse : ")
 	resemble_print(synapse)
 	export_txt(synapse, "synapse_record/" + create_timestamp())
 
+	#対応付け
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
 
