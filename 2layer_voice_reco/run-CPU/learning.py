@@ -21,6 +21,8 @@ from console_write import *
 from get_current_directory import *
 from get_logmelspectrum import get_log_melspectrum
 from wav_split import *
+from record_synapse import *
+
 
 def learning():
 	#potentials of output neurons
@@ -48,6 +50,8 @@ def learning():
 	for i in range(par.kSecondLayerNuerons_):
 		for j in range(par.kFirstLayerNuerons_):
 			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
+
+	export_txt(synapse, "synapse_record/" + "initial" + create_timestamp())
 
 	for epoch in range(1):
 		for wave_file in learning_path:
@@ -186,7 +190,6 @@ def connect_spike(spike_train):
 
 
 if __name__ == "__main__":
-	from record_synapse import *
 	import random
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
