@@ -40,10 +40,6 @@ def learning(learning_path, synapse):
 		a = neuron()
 		layer2.append(a)
 
-	for i in range(par.kSecondLayerNuerons_):
-		for j in range(par.kFirstLayerNuerons_):
-			synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
-
 	export_txt(synapse, "synapse_record/" + "initial" + create_timestamp())
 
 	for epoch in range(1):
@@ -197,6 +193,9 @@ if __name__ == "__main__":
 	if len(args) == 1:
 		#synapse matrix	initialization
 		synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
+		for i in range(par.kSecondLayerNuerons_):
+			for j in range(par.kFirstLayerNuerons_):
+				synapse[i][j] = random.uniform(0, 0.4 * par.kScale_)
 	else:
 		input_synaps = args[1]
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
