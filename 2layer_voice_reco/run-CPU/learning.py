@@ -51,6 +51,8 @@ def learning(learning_path, synapse):
 			splited_sig_array, samplerate = wav_split(str(wave_file))
 			resemble_print(str(wave_file))
 			
+			splited_sig_array = remove_silence(splited_sig_array)
+			print(len(splited_sig_array))
 			#スパイクの連結
 			#spike_train = wav_split2spike(splited_sig_array, samplerate)
 			#spike_connected = np.array(connect_spike(spike_train))
@@ -177,6 +179,18 @@ def connect_spike(spike_train):
 	
 	return spike_connected
 
+
+def remove_silence(splited_sig_array):
+    db_sum_list = [sum(abs(signal)) for signal in splited_sig_array]
+    remove_index = []
+    for index, db in enumerate(db_sum_list):
+        if db < 1:
+            remove_index.append(index)
+
+    remove_index.reverse()
+    for i in remove_index:
+        splited_sig_array.pop(i)
+    return splited_sig_array
 
 if __name__ == "__main__":
 	import random
