@@ -40,8 +40,6 @@ def learning(learning_path, synapse):
 		a = neuron()
 		layer2.append(a)
 
-	export_txt(synapse, "synapse_record/" + "initial" + create_timestamp())
-
 	for epoch in range(1):
 		for wave_file in learning_path:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
@@ -51,6 +49,8 @@ def learning(learning_path, synapse):
 			splited_sig_array, samplerate = wav_split(str(wave_file))
 			resemble_print(str(wave_file))
 			
+			splited_sig_array = remove_silence(splited_sig_array)
+			print(len(splited_sig_array))
 			#スパイクの連結
 			#spike_train = wav_split2spike(splited_sig_array, samplerate)
 			#spike_connected = np.array(connect_spike(spike_train))
@@ -178,6 +178,18 @@ def connect_spike(spike_train):
 	return spike_connected
 
 
+def remove_silence(splited_sig_array):
+    db_sum_list = [sum(abs(signal)) for signal in splited_sig_array]
+    remove_index = []
+    for index, db in enumerate(db_sum_list):
+        if db < 1:
+            remove_index.append(index)
+
+    remove_index.reverse()
+    for i in remove_index:
+        splited_sig_array.pop(i)
+    return splited_sig_array
+
 if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
@@ -185,7 +197,7 @@ if __name__ == "__main__":
 
 	#学習
 	#get wavefile path for learning
-	learning_path = get_learning_small_file_path()
+	learning_path = get_learningfile_path()
 	#learning_path = get_mappingfile_path()
 	#learning_path = [onedivision for a in learning_path for onedivision in a] #2次元のパスを1次元に変更
 
@@ -201,12 +213,15 @@ if __name__ == "__main__":
 		input_synaps = args[1]
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
 
-	print(synapse)
+	initial_synapse_path = "synapse_record/" + "initial" + create_timestamp()
+	print(initial_synapse_path)
+	export_txt(synapse, initial_synapse_path)
+
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
-	resemble_print("synapse : ")
-	resemble_print(synapse)
-	export_txt(synapse, "synapse_record/" + create_timestamp())
+	learned_synapse_path = "synapse_record/" + create_timestamp()
+	print("export : " + learned_synapse_path)
+	export_txt(synapse, learned_synapse_path)
 
 	#対応付け
 	secondhand_wav_file = []

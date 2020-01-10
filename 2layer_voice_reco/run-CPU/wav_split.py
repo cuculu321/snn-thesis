@@ -70,8 +70,10 @@ def time_dependent_wavsplit(file_name):
 
 if __name__ == '__main__':
     #splited_sig_array, samplerate = wav_split("./sounddata/F1/F1SYB01_あ.wav")
-    splited_sig_array, samplerate = time_dependent_wavsplit("./sounddata/F1/F1SYB01_あ.wav")
-    print(len(splited_sig_array[1]) / samplerate)
+    splited_sig_array, samplerate = wav_split("./PASL-DSR/WAVES/F1/HIN/F1HIN01.wav")
+    np.set_printoptions(threshold=np.inf)
+    print(len(splited_sig_array))
+    print([sum(abs(v)) for v in splited_sig_array])
     """
     time = np.arange(0, 40, 0.0625)
     x = splited_sig_array[int(len(splited_sig_array)/2)]
