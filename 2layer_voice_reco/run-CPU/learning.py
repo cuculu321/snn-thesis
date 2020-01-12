@@ -30,7 +30,7 @@ def learning(learning_path, synapse):
 	for i in range(par.kSecondLayerNuerons_):
 		potential_lists.append([])
 
-	#time series 
+	#time series
 	time_array  = np.arange(1, par.kTime_+1, 1)
 
 	layer2 = []
@@ -44,11 +44,11 @@ def learning(learning_path, synapse):
 		for wave_file in learning_path:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			resemble_print(str(wave_file) + "  " + str(epoch))
-			
+
 			#音声データの読み込み
 			splited_sig_array, samplerate = wav_split(str(wave_file))
 			resemble_print(str(wave_file))
-			
+
 			splited_sig_array = remove_silence(splited_sig_array)
 			print(len(splited_sig_array))
 			#スパイクの連結
@@ -70,7 +70,7 @@ def learning(learning_path, synapse):
 				# var_threshold = 9
 				# resemble_print var_threshold
 				# var_D = (var_threshold*3)*0.07
-				
+
 				var_D = 0.15 * par.kScale_
 
 				for x in layer2:
@@ -78,7 +78,7 @@ def learning(learning_path, synapse):
 
 				#flag for lateral inhibition
 				flag_spike = 0
-				
+
 				img_win = 100
 
 				active_potential = []
@@ -88,9 +88,9 @@ def learning(learning_path, synapse):
 				#Leaky integrate and fire neuron dynamics
 				for time in time_array:
 					for second_layer_position, second_layer_neuron in enumerate(layer2):
-						active = []	
+						active = []
 						if(second_layer_neuron.t_rest < time):
-							second_layer_neuron.P = (second_layer_neuron.P 
+							second_layer_neuron.P = (second_layer_neuron.P
 													+ np.dot(
 														synapse[second_layer_position], spike_train[:, time]
 														)
@@ -99,7 +99,7 @@ def learning(learning_path, synapse):
 							if(second_layer_neuron.P > par.kPrest_):
 								second_layer_neuron.P -= var_D
 							active_potential[second_layer_position] = second_layer_neuron.P
-						
+
 						potential_lists[second_layer_position].append(second_layer_neuron.P)
 
 					# Lateral Inhibition
@@ -114,7 +114,7 @@ def learning(learning_path, synapse):
 								if(s != winner_neuron):
 									layer2[s].P = par.kMinPotential_
 
-					#Check for spikes and update weights				
+					#Check for spikes and update weights
 					for second_layer_position, second_layer_neuron in enumerate(layer2):
 						neuron_status = second_layer_neuron.check()
 						if(neuron_status == 1):
@@ -174,7 +174,7 @@ def connect_spike(spike_train):
 		spike_connected_wip.extend(spike_train[i+2])
 		spike_connected_wip.extend(spike_train[i+3])
 		spike_connected.append(spike_connected_wip)
-	
+
 	return spike_connected
 
 
@@ -241,7 +241,7 @@ if __name__ == "__main__":
 		for speaker in use_speakers:
 			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
 			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
-	
+
 		neuron_mode = calculate_mode(winner_neurons)
 		resemble_print(neuron_mode[0])
 		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
