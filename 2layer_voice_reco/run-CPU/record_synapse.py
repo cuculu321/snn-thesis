@@ -1,6 +1,6 @@
 from datetime import datetime
 
-def export_txt(target_list, output_path):
+def export_list2txt(target_list, output_path):
 	save_path = output_path + ".txt"
 	
 	with open(save_path, mode = 'w') as save_file:
