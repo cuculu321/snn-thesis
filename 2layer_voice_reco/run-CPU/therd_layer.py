@@ -46,5 +46,6 @@ if __name__ == "__main__":
 		therd_neuron.append(second_therd_synapse)
 		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-		export_list2txt(synapse, learned_synapse_path)
+	second_therd_synapse_path = "2-3synapse/" + input_synaps
+	export_list2txt(therd_neuron, second_therd_synapse_path)
 

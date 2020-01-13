@@ -215,13 +215,13 @@ if __name__ == "__main__":
 
 	initial_synapse_path = "synapse_record/" + "initial" + create_timestamp()
 	print(initial_synapse_path)
-	export_txt(synapse, initial_synapse_path)
+	export_list2txt(synapse, initial_synapse_path)
 
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
 	learned_synapse_path = "synapse_record/" + create_timestamp()
 	print("export : " + learned_synapse_path)
-	export_txt(synapse, learned_synapse_path)
+	export_list2txt(synapse, learned_synapse_path)
 
 	#対応付け
 	secondhand_wav_file = []
