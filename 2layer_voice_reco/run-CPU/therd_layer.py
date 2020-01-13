@@ -2,6 +2,12 @@ from mapping import *
 import numpy as np
 from parameters import param as par
 
+import math
+
+def cos_sim(v1, v2):
+    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+
+
 if __name__ == "__main__":
 	from record_synapse import *
 
@@ -59,4 +65,37 @@ if __name__ == "__main__":
 
 	elif mode == "-c":
 		print("check")
+		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
 		second_therd_synapse = import_synapse("2-3synapse/" + str(input_synaps) + ".txt")
+
+		print(synapse)
+
+		secondhand_wav_file = []
+		speaker_list = [i for i in range(0, 12)]
+
+		mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
+
+		mapping_path = get_mappingfile_path()
+		for i in range(len(mapping_path)):
+			mapping_path[i].sort()
+
+		therd_neuron = []
+		mapping_list = []
+
+		for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
+			use_speakers = random.sample(speaker_list, 6)
+			resemble_print(use_speakers)
+			secondhand_wav_file.append(use_speakers)
+			winner_neurons = []
+
+			for speaker in use_speakers:
+				resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+				count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
+				num_neuron_fire = sum(count_neuron_fire)
+
+				parsent_neuron_fire = count_neuron_fire / num_neuron_fire
+
+				print(second_therd_synapse[syllable_num])
+				print(parsent_neuron_fire)
+				print(cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire))
+
