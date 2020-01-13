@@ -240,7 +240,13 @@ if __name__ == "__main__":
 		winner_neurons = []
 		for speaker in use_speakers:
 			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
-			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
+			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			most_fired_neuron = max_index(
+									winner_take_all(synapse, mapping_path[speaker][syllable_num])
+								)
+			
+			resemble_print("win neuron : " + str(most_fired_neuron))
+			winner_neurons.append(most_fired_neuron)
 
 		neuron_mode = calculate_mode(winner_neurons)
 		resemble_print(neuron_mode[0])
