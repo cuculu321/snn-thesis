@@ -221,7 +221,8 @@ if __name__ == "__main__":
 
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
-	learned_synapse_path = "synapse_record/" + create_timestamp()
+	run_time = create_timestamp()
+	learned_synapse_path = "synapse_record/" + runtime
 	print("export : " + learned_synapse_path)
 	export_list2txt(synapse, learned_synapse_path)
 
@@ -258,7 +259,7 @@ if __name__ == "__main__":
 		therd_neuron.append(second_therd_synapse)
 		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-	second_therd_synapse_path = "2-3synapse/" + input_synaps
+	second_therd_synapse_path = "2-3synapse/" + run_time
 	export_list2txt(therd_neuron, second_therd_synapse_path)
 
 	#対応付け
@@ -283,6 +284,6 @@ if __name__ == "__main__":
 
 	neuron_parsent = neuron_parsent / len(use_speakers)
 	print(neuron_parsent)
-	export_list2txt(neuron_parsent, "end/" + str(input_synaps))
+	export_list2txt(neuron_parsent, "end/" + run_time)
 
 	export_color_map(neuron_parsent)
