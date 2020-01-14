@@ -31,8 +31,6 @@ if __name__ == "__main__":
 		secondhand_wav_file = []
 		speaker_list = [i for i in range(0, 12)]
 
-		mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
-
 		mapping_path = get_mappingfile_path()
 		for i in range(len(mapping_path)):
 			mapping_path[i].sort()

@@ -236,6 +236,8 @@ if __name__ == "__main__":
 		mapping_path[i].sort()
 
 	second_therd_synapse = np.zeros(par.kSecondLayerNuerons_)
+	therd_neuron = []
+	mapping_list = []
 
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_list, 6)
