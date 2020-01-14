@@ -195,6 +195,7 @@ if __name__ == "__main__":
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
 	from therd_layer import *
+	from color_map import export_color_map
 
 	#学習
 	#get wavefile path for learning
@@ -279,3 +280,5 @@ if __name__ == "__main__":
 	neuron_parsent = neuron_parsent / len(use_speakers)
 	print(neuron_parsent)
 	export_list2txt(neuron_parsent, "end/" + str(input_synaps))
+
+	export_color_map(neuron_parsent)
