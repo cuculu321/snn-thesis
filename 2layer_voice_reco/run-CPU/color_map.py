@@ -23,4 +23,4 @@ if __name__ == "__main__":
 
 	neuron_parsent = import_synapse("end/" + str(input_file) + ".txt")
 
-	export_color_map(np.random.randn(100).reshape((10, 10)))
+	export_color_map(neuron_parsent)
