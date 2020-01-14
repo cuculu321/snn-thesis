@@ -21,6 +21,7 @@ if __name__ == "__main__":
 	else:
 		print("-t [1-2synapse path] training 2-3 synapse")
 		print("-c [2-3synapse path] check accuracy")
+		sys.exit()
 
 	mode = args[1]
 	input_synaps = args[2]
