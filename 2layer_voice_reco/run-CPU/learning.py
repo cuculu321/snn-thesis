@@ -194,6 +194,7 @@ if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
+	from therd_layer import *
 
 	#学習
 	#get wavefile path for learning
@@ -208,7 +209,7 @@ if __name__ == "__main__":
 		synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 		for i in range(par.kSecondLayerNuerons_):
 			for j in range(par.kFirstLayerNuerons_):
-				synapse[i][j] = random.uniform(0.45, 0.5 * par.kScale_)
+				synapse[i][j] = random.uniform(0.4, 0.5 * par.kScale_)
 	else:
 		input_synaps = args[1]
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
@@ -223,7 +224,7 @@ if __name__ == "__main__":
 	print("export : " + learned_synapse_path)
 	export_list2txt(synapse, learned_synapse_path)
 
-	#対応付け
+	#2,3層目の学習
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
 
@@ -241,28 +242,38 @@ if __name__ == "__main__":
 		for speaker in use_speakers:
 			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
 			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
-			most_fired_neuron = max_index(
-									winner_take_all(synapse, mapping_path[speaker][syllable_num])
-								)
-			
-			resemble_print("win neuron : " + str(most_fired_neuron))
-			winner_neurons.append(most_fired_neuron)
+			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
+			num_neuron_fire = sum(count_neuron_fire)
+			print(num_neuron_fire)
 
-		neuron_mode = calculate_mode(winner_neurons)
-		resemble_print(neuron_mode[0])
-		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
-		resemble_print(mapping_list)
+			second_therd_synapse += count_neuron_fire / num_neuron_fire
 
+		second_therd_synapse = second_therd_synapse / len(use_speakers)
+		print(second_therd_synapse)
+		therd_neuron.append(second_therd_synapse)
+		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-	x_axis = np.arange(0, len(potential_lists[0]), 1)
-	layer2_Pth = []
-	for i in range(len(x_axis)):
-		layer2_Pth.append(layer2[0].Pth)
+	second_therd_synapse_path = "2-3synapse/" + input_synaps
+	export_list2txt(therd_neuron, second_therd_synapse_path)
 
-	#plotting
-	for second_layer_position in range(par.kSecondLayerNuerons_):
-		axes = plt.gca()
-		axes.set_ylim([-20,50])
-		plt.plot(x_axis, layer2_Pth, 'r' )
-		plt.plot(x_axis, potential_lists[second_layer_position])
-		plt.show()
+	#対応付け
+	therd_neuron = []
+	mapping_list = []
+
+	for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
+		use_speakers = random.sample(speaker_list, 6)
+		resemble_print(use_speakers)
+		secondhand_wav_file.append(use_speakers)
+		winner_neurons = []
+
+		for speaker in use_speakers:
+			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
+			num_neuron_fire = sum(count_neuron_fire)
+
+			parsent_neuron_fire = count_neuron_fire / num_neuron_fire
+
+			print(second_therd_synapse[syllable_num])
+			print(parsent_neuron_fire)
+			print(cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire))
+
