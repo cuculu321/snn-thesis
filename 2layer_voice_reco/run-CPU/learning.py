@@ -30,7 +30,7 @@ def learning(learning_path, synapse):
 	for i in range(par.kSecondLayerNuerons_):
 		potential_lists.append([])
 
-	#time series 
+	#time series
 	time_array  = np.arange(1, par.kTime_+1, 1)
 
 	layer2 = []
@@ -44,11 +44,11 @@ def learning(learning_path, synapse):
 		for wave_file in learning_path:
 		#for wave_file in ["sounddata\F1\F1SYB01_が.wav"]:
 			resemble_print(str(wave_file) + "  " + str(epoch))
-			
+
 			#音声データの読み込み
 			splited_sig_array, samplerate = wav_split(str(wave_file))
 			resemble_print(str(wave_file))
-			
+
 			splited_sig_array = remove_silence(splited_sig_array)
 			print(len(splited_sig_array))
 			#スパイクの連結
@@ -70,7 +70,7 @@ def learning(learning_path, synapse):
 				# var_threshold = 9
 				# resemble_print var_threshold
 				# var_D = (var_threshold*3)*0.07
-				
+
 				var_D = 0.15 * par.kScale_
 
 				for x in layer2:
@@ -78,7 +78,7 @@ def learning(learning_path, synapse):
 
 				#flag for lateral inhibition
 				flag_spike = 0
-				
+
 				img_win = 100
 
 				active_potential = []
@@ -88,9 +88,9 @@ def learning(learning_path, synapse):
 				#Leaky integrate and fire neuron dynamics
 				for time in time_array:
 					for second_layer_position, second_layer_neuron in enumerate(layer2):
-						active = []	
+						active = []
 						if(second_layer_neuron.t_rest < time):
-							second_layer_neuron.P = (second_layer_neuron.P 
+							second_layer_neuron.P = (second_layer_neuron.P
 													+ np.dot(
 														synapse[second_layer_position], spike_train[:, time]
 														)
@@ -99,7 +99,7 @@ def learning(learning_path, synapse):
 							if(second_layer_neuron.P > par.kPrest_):
 								second_layer_neuron.P -= var_D
 							active_potential[second_layer_position] = second_layer_neuron.P
-						
+
 						potential_lists[second_layer_position].append(second_layer_neuron.P)
 
 					# Lateral Inhibition
@@ -114,7 +114,7 @@ def learning(learning_path, synapse):
 								if(s != winner_neuron):
 									layer2[s].P = par.kMinPotential_
 
-					#Check for spikes and update weights				
+					#Check for spikes and update weights
 					for second_layer_position, second_layer_neuron in enumerate(layer2):
 						neuron_status = second_layer_neuron.check()
 						if(neuron_status == 1):
@@ -174,7 +174,7 @@ def connect_spike(spike_train):
 		spike_connected_wip.extend(spike_train[i+2])
 		spike_connected_wip.extend(spike_train[i+3])
 		spike_connected.append(spike_connected_wip)
-	
+
 	return spike_connected
 
 
@@ -194,6 +194,7 @@ if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
+	from therd_layer import *
 
 	#学習
 	#get wavefile path for learning
@@ -208,22 +209,22 @@ if __name__ == "__main__":
 		synapse = np.zeros((par.kSecondLayerNuerons_, par.kFirstLayerNuerons_))
 		for i in range(par.kSecondLayerNuerons_):
 			for j in range(par.kFirstLayerNuerons_):
-				synapse[i][j] = random.uniform(0.3, 0.4 * par.kScale_)
+				synapse[i][j] = random.uniform(0.4, 0.5 * par.kScale_)
 	else:
 		input_synaps = args[1]
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
 
 	initial_synapse_path = "synapse_record/" + "initial" + create_timestamp()
 	print(initial_synapse_path)
-	export_txt(synapse, initial_synapse_path)
+	export_list2txt(synapse, initial_synapse_path)
 
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
 	learned_synapse_path = "synapse_record/" + create_timestamp()
 	print("export : " + learned_synapse_path)
-	export_txt(synapse, learned_synapse_path)
+	export_list2txt(synapse, learned_synapse_path)
 
-	#対応付け
+	#2,3層目の学習
 	secondhand_wav_file = []
 	speaker_list = [i for i in range(0, 12)]
 
@@ -240,23 +241,41 @@ if __name__ == "__main__":
 		winner_neurons = []
 		for speaker in use_speakers:
 			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
-			winner_neurons.append(winner_take_all(synapse, mapping_path[speaker][syllable_num]))
-	
-		neuron_mode = calculate_mode(winner_neurons)
-		resemble_print(neuron_mode[0])
-		mapping_list = mapping(mapping_list, neuron_mode[0], mapping_path[speaker][syllable_num])
-		resemble_print(mapping_list)
+			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
+			num_neuron_fire = sum(count_neuron_fire)
+			print(num_neuron_fire)
+
+			second_therd_synapse += count_neuron_fire / num_neuron_fire
+
+		second_therd_synapse = second_therd_synapse / len(use_speakers)
+		print(second_therd_synapse)
+		therd_neuron.append(second_therd_synapse)
+		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
+
+	second_therd_synapse_path = "2-3synapse/" + input_synaps
+	export_list2txt(therd_neuron, second_therd_synapse_path)
+
+	#対応付け
+	therd_neuron = []
+	mapping_list = []
+	neuron_parsent = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
 
 
-	x_axis = np.arange(0, len(potential_lists[0]), 1)
-	layer2_Pth = []
-	for i in range(len(x_axis)):
-		layer2_Pth.append(layer2[0].Pth)
+	for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
+		use_speakers = random.sample(speaker_list, 6)
+		resemble_print(use_speakers)
+		secondhand_wav_file.append(use_speakers)
+		winner_neurons = []
 
-	#plotting
-	for second_layer_position in range(par.kSecondLayerNuerons_):
-		axes = plt.gca()
-		axes.set_ylim([-20,50])
-		plt.plot(x_axis, layer2_Pth, 'r' )
-		plt.plot(x_axis, potential_lists[second_layer_position])
-		plt.show()
+		for speaker in use_speakers:
+			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
+			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
+			num_neuron_fire = sum(count_neuron_fire)
+
+			for syllable in range(len(mapping_path[0])):
+				neuron_parsent[syllable_num][syllable] += cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire)
+
+	neuron_parsent = neuron_parsent / len(use_speakers)
+	print(neuron_parsent)
+	export_list2txt(neuron_parsent, "end/" + str(input_synaps))
