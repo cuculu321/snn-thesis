@@ -235,6 +235,8 @@ if __name__ == "__main__":
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 
+	second_therd_synapse = np.zeros(par.kSecondLayerNuerons_)
+
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_list, 6)
 		resemble_print(use_speakers)
