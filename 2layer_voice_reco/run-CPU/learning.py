@@ -259,6 +259,8 @@ if __name__ == "__main__":
 	#対応付け
 	therd_neuron = []
 	mapping_list = []
+	neuron_parsent = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
+
 
 	for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
 		use_speakers = random.sample(speaker_list, 6)
@@ -271,9 +273,9 @@ if __name__ == "__main__":
 			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
 			num_neuron_fire = sum(count_neuron_fire)
 
-			parsent_neuron_fire = count_neuron_fire / num_neuron_fire
+			for syllable in range(len(mapping_path[0])):
+				neuron_parsent[syllable_num][syllable] += cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire)
 
-			print(second_therd_synapse[syllable_num])
-			print(parsent_neuron_fire)
-			print(cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire))
-
+	neuron_parsent = neuron_parsent / len(use_speakers)
+	print(neuron_parsent)
+	export_list2txt(neuron_parsent, "end/" + str(input_synaps))
