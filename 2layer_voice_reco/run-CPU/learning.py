@@ -279,6 +279,8 @@ if __name__ == "__main__":
 			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
 			num_neuron_fire = sum(count_neuron_fire)
 
+			parsent_neuron_fire = count_neuron_fire / num_neuron_fire
+
 			for syllable in range(len(mapping_path[0])):
 				neuron_parsent[syllable_num][syllable] += cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire)
 
