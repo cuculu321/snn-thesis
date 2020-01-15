@@ -15,7 +15,7 @@ if __name__ == "__main__":
 	import random
 	import sys
 	from get_current_directory import *
-	from mapping import max_index
+	from mapping import max_index, extract_label
 
 	args = sys.argv
 	if len(args) == 3:
@@ -91,6 +91,8 @@ if __name__ == "__main__":
 			secondhand_wav_file.append(use_speakers)
 			winner_neurons = []
 
+			mapping_list.append(extract_label(mapping_path[0][syllable_num]))
+
 			for speaker in use_speakers:
 				resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
 				count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
@@ -123,6 +125,7 @@ if __name__ == "__main__":
 		#全体の正答率の算出
 		corrent_answers = []
 		for i in range(len(mapping_path[0])):
+			print(mapping_list[i] + " : " + str(accuracy[i]))
 			corrent_answers.append(accuracy[i][i])
 		
 		print(sum(corrent_answers) / len(mapping_path[0]))
