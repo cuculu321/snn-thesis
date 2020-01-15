@@ -222,7 +222,7 @@ if __name__ == "__main__":
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
 	run_time = create_timestamp()
-	learned_synapse_path = "synapse_record/" + runtime
+	learned_synapse_path = "synapse_record/" + run_time
 	print("export : " + learned_synapse_path)
 	export_list2txt(synapse, learned_synapse_path)
 
