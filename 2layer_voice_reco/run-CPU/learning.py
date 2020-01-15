@@ -195,6 +195,7 @@ if __name__ == "__main__":
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
 	from therd_layer import *
+	from color_map import export_color_map
 
 	#学習
 	#get wavefile path for learning
@@ -220,7 +221,8 @@ if __name__ == "__main__":
 
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
-	learned_synapse_path = "synapse_record/" + create_timestamp()
+	run_time = create_timestamp()
+	learned_synapse_path = "synapse_record/" + run_time
 	print("export : " + learned_synapse_path)
 	export_list2txt(synapse, learned_synapse_path)
 
@@ -233,6 +235,10 @@ if __name__ == "__main__":
 	mapping_path = get_mappingfile_path()
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
+
+	second_therd_synapse = np.zeros(par.kSecondLayerNuerons_)
+	therd_neuron = []
+	mapping_list = []
 
 	for syllable_num in range(len(mapping_path[0])):
 		use_speakers = random.sample(speaker_list, 6)
@@ -253,7 +259,7 @@ if __name__ == "__main__":
 		therd_neuron.append(second_therd_synapse)
 		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-	second_therd_synapse_path = "2-3synapse/" + input_synaps
+	second_therd_synapse_path = "2-3synapse/" + run_time
 	export_list2txt(therd_neuron, second_therd_synapse_path)
 
 	#対応付け
@@ -273,9 +279,13 @@ if __name__ == "__main__":
 			count_neuron_fire = winner_take_all(synapse, mapping_path[speaker][syllable_num])
 			num_neuron_fire = sum(count_neuron_fire)
 
+			parsent_neuron_fire = count_neuron_fire / num_neuron_fire
+
 			for syllable in range(len(mapping_path[0])):
 				neuron_parsent[syllable_num][syllable] += cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire)
 
 	neuron_parsent = neuron_parsent / len(use_speakers)
 	print(neuron_parsent)
-	export_list2txt(neuron_parsent, "end/" + str(input_synaps))
+	export_list2txt(neuron_parsent, "end/" + run_time)
+
+	export_color_map(neuron_parsent)

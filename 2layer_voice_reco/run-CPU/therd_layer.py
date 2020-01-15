@@ -21,6 +21,7 @@ if __name__ == "__main__":
 	else:
 		print("-t [1-2synapse path] training 2-3 synapse")
 		print("-c [2-3synapse path] check accuracy")
+		sys.exit()
 
 	mode = args[1]
 	input_synaps = args[2]
@@ -29,8 +30,6 @@ if __name__ == "__main__":
 
 		secondhand_wav_file = []
 		speaker_list = [i for i in range(0, 12)]
-
-		mapping_list = [[] for _ in range(par.kSecondLayerNuerons_)]
 
 		mapping_path = get_mappingfile_path()
 		for i in range(len(mapping_path)):
