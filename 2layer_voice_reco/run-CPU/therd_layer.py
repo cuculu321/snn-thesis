@@ -125,7 +125,7 @@ if __name__ == "__main__":
 		#全体の正答率の算出
 		corrent_answers = []
 		for i in range(len(mapping_path[0])):
-			print(mapping_list[i] + " : " + str(accuracy[i]))
+			print(mapping_list[i] + " : " + str(accuracy[i][i]))
 			corrent_answers.append(accuracy[i][i])
 		
 		print(sum(corrent_answers) / len(mapping_path[0]))
