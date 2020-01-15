@@ -5,7 +5,8 @@ from parameters import param as par
 import math
 
 def cos_sim(v1, v2):
-    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+
+	return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
 
 if __name__ == "__main__":
@@ -14,9 +15,10 @@ if __name__ == "__main__":
 	import random
 	import sys
 	from get_current_directory import *
+	from mapping import max_index
 
 	args = sys.argv
-	if len(args) == 2:
+	if len(args) == 3:
 		print("run")
 	else:
 		print("-t [1-2synapse path] training 2-3 synapse")
@@ -80,6 +82,8 @@ if __name__ == "__main__":
 		#mapping_list = [[] for _ in range(len(mapping_path[0]))]
 		mapping_list = []
 		neuron_parsent = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
+		win_neuron = np.zeros(len(mapping_path[0]))
+		accuracy = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
 
 		for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
 			use_speakers = random.sample(speaker_list, 6)
@@ -94,9 +98,31 @@ if __name__ == "__main__":
 
 				parsent_neuron_fire = count_neuron_fire / num_neuron_fire
 
+				"""
+				#各値のらしさを計算
 				for syllable in range(len(mapping_path[0])):
 					neuron_parsent[syllable_num][syllable] += cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire)
+				"""
+				#最も近いニューロンに1を加算する
+				for syllable in range(len(mapping_path[0])):
+					print(second_therd_synapse[syllable])
+					how_like = cos_sim(second_therd_synapse[syllable], parsent_neuron_fire)
+					#print(how_like)
+					neuron_parsent[syllable_num][syllable] += how_like
+					win_neuron[syllable] += how_like
+				#print(win_neuron)
+				#print(max_index(win_neuron))
+				accuracy[syllable_num][max_index(win_neuron)] += 1
 
-		neuron_parsent = neuron_parsent / len(use_speakers)
+		#neuron_parsent = neuron_parsent / len(use_speakers)
 		print(neuron_parsent)
+		accuracy = accuracy / len(use_speakers)
 		export_list2txt(neuron_parsent, "end/" + str(input_synaps))
+		export_list2txt(accuracy, "end/ansur" + str(input_synaps))
+
+		#全体の正答率の算出
+		corrent_answers = []
+		for i in range(len(mapping_path[0])):
+			corrent_answers.append(accuracy[i][i])
+		
+		print(sum(corrent_answers) / len(mapping_path[0]))
