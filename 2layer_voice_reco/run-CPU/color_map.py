@@ -9,6 +9,10 @@ def export_color_map(double_list):
 	# create an axes on the right side of ax. The width of cax will be 5%
 	# of ax and the padding between cax and ax will be fixed at 0.05 inch.
 	divider = make_axes_locatable(ax)
+	plt.xlabel('predict label')
+	plt.ylabel('test label')
+
+
 	cax = divider.append_axes("right", size="5%", pad=0.1)
 	plt.colorbar(im, cax=cax)
 	plt.savefig("cb_append_axes.png", bbox_inches = 'tight', pad_inches = 0)
