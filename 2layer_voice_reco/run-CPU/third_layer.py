@@ -29,6 +29,7 @@ if __name__ == "__main__":
 	input_synaps = args[2]
 	if mode == "-t":
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/" + input_synaps +".txt")
 
 		secondhand_wav_file = []
 		speaker_list = [i for i in range(0, 12)]
@@ -37,7 +38,7 @@ if __name__ == "__main__":
 		for i in range(len(mapping_path)):
 			mapping_path[i].sort()
 
-		therd_neuron = []
+		third_neuron = []
 		mapping_list = []
 
 		for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 			secondhand_wav_file.append(use_speakers)
 			winner_neurons = []
 
-			second_therd_synapse = np.zeros(par.kSecondLayerNuerons_)
+			second_third_synapse = np.zeros(par.kSecondLayerNuerons_)
 
 			for speaker in use_speakers:
 				resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
@@ -54,20 +55,23 @@ if __name__ == "__main__":
 				num_neuron_fire = sum(count_neuron_fire)
 				print(num_neuron_fire)
 
-				second_therd_synapse += count_neuron_fire / num_neuron_fire
+				second_third_synapse += count_neuron_fire / num_neuron_fire
 
-			second_therd_synapse = second_therd_synapse / len(use_speakers)
-			print(second_therd_synapse)
-			therd_neuron.append(second_therd_synapse)
+			second_third_synapse = second_third_synapse / len(use_speakers)
+			print(second_third_synapse)
+			third_neuron.append(second_third_synapse)
 			mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-		second_therd_synapse_path = "2-3synapse/" + input_synaps
-		export_list2txt(therd_neuron, second_therd_synapse_path)
+		second_third_synapse_path = "2-3synapse/" + input_synaps
+		export_list2txt(third_neuron, second_third_synapse_path)
 
 	elif mode == "-c":
 		print("check")
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
-		second_therd_synapse = import_synapse("2-3synapse/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/1-2synapse" + input_synaps +".txt")
+		
+		second_third_synapse = import_synapse("2-3synapse/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/2-3synapse" + input_synaps +".txt")
 
 		print(synapse)
 
@@ -78,7 +82,7 @@ if __name__ == "__main__":
 		for i in range(len(mapping_path)):
 			mapping_path[i].sort()
 
-		therd_neuron = []
+		third_neuron = []
 		#mapping_list = [[] for _ in range(len(mapping_path[0]))]
 		mapping_list = []
 		neuron_parsent = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
@@ -103,12 +107,12 @@ if __name__ == "__main__":
 				"""
 				#各値のらしさを計算
 				for syllable in range(len(mapping_path[0])):
-					neuron_parsent[syllable_num][syllable] += cos_sim(second_therd_synapse[syllable_num], parsent_neuron_fire)
+					neuron_parsent[syllable_num][syllable] += cos_sim(second_third_synapse[syllable_num], parsent_neuron_fire)
 				"""
 				#最も近いニューロンに1を加算する
 				for syllable in range(len(mapping_path[0])):
-					print(second_therd_synapse[syllable])
-					how_like = cos_sim(second_therd_synapse[syllable], parsent_neuron_fire)
+					print(second_third_synapse[syllable])
+					how_like = cos_sim(second_third_synapse[syllable], parsent_neuron_fire)
 					#print(how_like)
 					neuron_parsent[syllable_num][syllable] += how_like
 					win_neuron[syllable] += how_like
