@@ -29,6 +29,7 @@ if __name__ == "__main__":
 	input_synaps = args[2]
 	if mode == "-t":
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/" + input_synaps +".txt")
 
 		secondhand_wav_file = []
 		speaker_list = [i for i in range(0, 12)]
@@ -67,7 +68,10 @@ if __name__ == "__main__":
 	elif mode == "-c":
 		print("check")
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/1-2synapse" + input_synaps +".txt")
+		
 		second_therd_synapse = import_synapse("2-3synapse/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/2-3synapse" + input_synaps +".txt")
 
 		print(synapse)
 

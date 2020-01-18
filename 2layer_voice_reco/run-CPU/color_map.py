@@ -26,5 +26,7 @@ if __name__ == "__main__":
 	input_file = args[1]
 
 	neuron_parsent = import_synapse("end/" + str(input_file) + ".txt")
+	#synapse = import_synapse(input_synaps + "/end" + input_synaps +".txt")
+
 
 	export_color_map(neuron_parsent, input_file)

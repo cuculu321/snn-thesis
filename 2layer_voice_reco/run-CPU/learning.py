@@ -215,6 +215,8 @@ if __name__ == "__main__":
 	else:
 		input_synaps = args[1]
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
+		#synapse = import_synapse(input_synaps + "/" + input_synaps +".txt")
+
 
 	run_time = create_timestamp()
 	os.mkdir(run_time)
