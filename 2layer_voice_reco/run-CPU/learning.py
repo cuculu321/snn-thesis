@@ -193,6 +193,7 @@ def remove_silence(splited_sig_array):
 if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
+	from export_parameters import export_par
 	from mapping import *
 	from third_layer import *
 	from color_map import export_color_map
@@ -223,6 +224,8 @@ if __name__ == "__main__":
 	initial_synapse_path = run_time + "/initial" + run_time
 	print(initial_synapse_path)
 	export_list2txt(synapse, initial_synapse_path)
+
+	export_par(run_time + "/run_parameters")
 
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
