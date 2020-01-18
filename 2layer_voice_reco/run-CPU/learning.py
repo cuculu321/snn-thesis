@@ -194,7 +194,7 @@ if __name__ == "__main__":
 	import random
 	from get_current_directory import get_mappingfile_path
 	from mapping import *
-	from therd_layer import *
+	from third_layer import *
 	from color_map import export_color_map
 	import os
 
@@ -240,8 +240,8 @@ if __name__ == "__main__":
 	for i in range(len(mapping_path)):
 		mapping_path[i].sort()
 
-	second_therd_synapse = np.zeros(par.kSecondLayerNuerons_)
-	therd_neuron = []
+	second_third_synapse = np.zeros(par.kSecondLayerNuerons_)
+	third_neuron = []
 	mapping_list = []
 
 	for syllable_num in range(len(mapping_path[0])):
@@ -256,18 +256,18 @@ if __name__ == "__main__":
 			num_neuron_fire = sum(count_neuron_fire)
 			print(num_neuron_fire)
 
-			second_therd_synapse += count_neuron_fire / num_neuron_fire
+			second_third_synapse += count_neuron_fire / num_neuron_fire
 
-		second_therd_synapse = second_therd_synapse / len(use_speakers)
-		print(second_therd_synapse)
-		therd_neuron.append(second_therd_synapse)
+		second_third_synapse = second_third_synapse / len(use_speakers)
+		print(second_third_synapse)
+		third_neuron.append(second_third_synapse)
 		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-	second_therd_synapse_path = run_time + "/2-3synapse" + run_time
-	export_list2txt(therd_neuron, second_therd_synapse_path)
+	second_third_synapse_path = run_time + "/2-3synapse" + run_time
+	export_list2txt(third_neuron, second_third_synapse_path)
 
 	#対応付け
-	therd_neuron = []
+	third_neuron = []
 	mapping_list = []
 	neuron_parsent = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
 
@@ -287,8 +287,8 @@ if __name__ == "__main__":
 
 			#最も近いニューロンに1を加算する
 			for syllable in range(len(mapping_path[0])):
-				print(second_therd_synapse[syllable])
-				how_like = cos_sim(second_therd_synapse[syllable], parsent_neuron_fire)
+				print(second_third_synapse[syllable])
+				how_like = cos_sim(second_third_synapse[syllable], parsent_neuron_fire)
 				#print(how_like)
 				neuron_parsent[syllable_num][syllable] += how_like
 				win_neuron[syllable] += how_like
