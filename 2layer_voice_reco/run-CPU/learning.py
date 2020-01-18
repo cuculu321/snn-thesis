@@ -196,6 +196,7 @@ if __name__ == "__main__":
 	from mapping import *
 	from therd_layer import *
 	from color_map import export_color_map
+	import os
 
 	#学習
 	#get wavefile path for learning
@@ -215,14 +216,15 @@ if __name__ == "__main__":
 		input_synaps = args[1]
 		synapse = import_synapse("synapse_record/" + str(input_synaps) + ".txt")
 
-	initial_synapse_path = "synapse_record/" + "initial" + create_timestamp()
+	run_time = create_timestamp()
+	os.mkdir(run_time)
+	initial_synapse_path = run_time + "/initial" + run_time
 	print(initial_synapse_path)
 	export_list2txt(synapse, initial_synapse_path)
 
 	potential_lists, synapse, layer2 = learning(learning_path, synapse)
 
-	run_time = create_timestamp()
-	learned_synapse_path = "synapse_record/" + run_time
+	learned_synapse_path = run_time + "/1-2synapse" + run_time
 	print("export : " + learned_synapse_path)
 	export_list2txt(synapse, learned_synapse_path)
 
@@ -259,7 +261,7 @@ if __name__ == "__main__":
 		therd_neuron.append(second_therd_synapse)
 		mapping_list.append(extract_label(mapping_path[speaker][syllable_num]))
 
-	second_therd_synapse_path = "2-3synapse/" + run_time
+	second_therd_synapse_path = run_time + "/2-3synapse" + run_time
 	export_list2txt(therd_neuron, second_therd_synapse_path)
 
 	#対応付け
@@ -295,8 +297,8 @@ if __name__ == "__main__":
 	#neuron_parsent = neuron_parsent / len(use_speakers)
 	print(neuron_parsent)
 	accuracy = accuracy / len(use_speakers)
-	export_list2txt(neuron_parsent, "end/" + str(input_synaps))
-	export_list2txt(accuracy, "end/ansur" + str(input_synaps))
+	export_list2txt(run_time, "/end" + run_time)
+	export_list2txt(run_time, "/answer" + run_time)
 
 	#全体の正答率の算出
 	corrent_answers = []
@@ -306,4 +308,4 @@ if __name__ == "__main__":
 	
 	print(sum(corrent_answers) / len(mapping_path[0]))
 
-	export_color_map(accuracy)
+	export_color_map(accuracy, run_time)

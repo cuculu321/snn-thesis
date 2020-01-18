@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
 
-def export_color_map(double_list):
+def export_color_map(double_list, output_path):
 	ax = plt.subplot(111)
 	im = ax.imshow(double_list)
 
@@ -15,7 +15,7 @@ def export_color_map(double_list):
 
 	cax = divider.append_axes("right", size="5%", pad=0.1)
 	plt.colorbar(im, cax=cax)
-	plt.savefig("cb_append_axes.png", bbox_inches = 'tight', pad_inches = 0)
+	plt.savefig(output_path + ".png", bbox_inches = 'tight', pad_inches = 0)
 
 
 if __name__ == "__main__":
@@ -27,4 +27,4 @@ if __name__ == "__main__":
 
 	neuron_parsent = import_synapse("end/" + str(input_file) + ".txt")
 
-	export_color_map(neuron_parsent)
+	export_color_map(neuron_parsent, input_file)
