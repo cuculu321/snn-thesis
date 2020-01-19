@@ -273,13 +273,16 @@ if __name__ == "__main__":
 	third_neuron = []
 	mapping_list = []
 	neuron_parsent = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
-
+	win_neuron = np.zeros(len(mapping_path[0]))
+	accuracy = np.zeros((len(mapping_path[0]),len(mapping_path[0])))
 
 	for syllable_num in range(len(mapping_path[0])): #単音節の数(F1のファイル数)分ループ
 		use_speakers = random.sample(speaker_list, 6)
 		resemble_print(use_speakers)
 		secondhand_wav_file.append(use_speakers)
 		winner_neurons = []
+
+		mapping_list.append(extract_label(mapping_path[0][syllable_num]))
 
 		for speaker in use_speakers:
 			resemble_print(str(speaker) + " : " + str(syllable_num) + " : " + str(mapping_path[speaker][syllable_num]))
@@ -302,8 +305,8 @@ if __name__ == "__main__":
 	#neuron_parsent = neuron_parsent / len(use_speakers)
 	print(neuron_parsent)
 	accuracy = accuracy / len(use_speakers)
-	export_list2txt(run_time, "/end" + run_time)
-	export_list2txt(run_time, "/answer" + run_time)
+	export_list2txt(neuron_parsent, run_time + "/end" + run_time)
+	export_list2txt(accuracy, run_time + "/answer" + run_time)
 
 	#全体の正答率の算出
 	corrent_answers = []
@@ -313,4 +316,4 @@ if __name__ == "__main__":
 	
 	print(sum(corrent_answers) / len(mapping_path[0]))
 
-	export_color_map(accuracy, run_time)
+	export_color_map(accuracy, run_time + "/color_map" +run_time)
