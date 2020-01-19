@@ -123,8 +123,8 @@ if __name__ == "__main__":
 		#neuron_parsent = neuron_parsent / len(use_speakers)
 		print(neuron_parsent)
 		accuracy = accuracy / len(use_speakers)
-		export_list2txt(neuron_parsent, run_time + "/end" + str(input_synaps))
-		export_list2txt(accuracy, run_time + "/answer" + str(input_synaps))
+		export_list2txt(neuron_parsent, input_synaps + "/end" + str(input_synaps))
+		export_list2txt(accuracy, input_synaps + "/answer" + str(input_synaps))
 
 		#全体の正答率の算出
 		corrent_answers = []
