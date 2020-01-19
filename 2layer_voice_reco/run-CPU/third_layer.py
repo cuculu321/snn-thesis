@@ -111,7 +111,6 @@ if __name__ == "__main__":
 				"""
 				#最も近いニューロンに1を加算する
 				for syllable in range(len(mapping_path[0])):
-					print(second_third_synapse[syllable])
 					how_like = cos_sim(second_third_synapse[syllable], parsent_neuron_fire)
 					#print(how_like)
 					neuron_parsent[syllable_num][syllable] += how_like
