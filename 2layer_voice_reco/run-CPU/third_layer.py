@@ -71,7 +71,7 @@ if __name__ == "__main__":
 		synapse = import_synapse(input_synaps + "/1-2synapse" + input_synaps +".txt")
 		
 		#second_third_synapse = import_synapse("2-3synapse/" + str(input_synaps) + ".txt")
-		synapse = import_synapse(input_synaps + "/2-3synapse" + input_synaps +".txt")
+		second_third_synapse = import_synapse(input_synaps + "/2-3synapse" + input_synaps +".txt")
 
 		print(synapse)
 
