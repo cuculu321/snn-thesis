@@ -4,7 +4,7 @@ def label_sort(target_list):
     sorted_label = []
     sorted_label.append(target_list[0]) #あ
     sorted_label.append(target_list[40]) #い
-    sorted_label.append(target_list7[70]) #う
+    sorted_label.append(target_list[70]) #う
     sorted_label.append(target_list[60]) #え
     sorted_label.append(target_list[95]) #お
 
