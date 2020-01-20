@@ -23,6 +23,8 @@ if __name__ == "__main__":
 	from label_sort import label_sort
 	import sys
 
+	from record_synapse import *
+
 	args = sys.argv
 	input_file = args[1]
 
@@ -34,4 +36,6 @@ if __name__ == "__main__":
 	for i in range(len(neuron_parsent)):
 		sorted_list.append(label_sort(neuron_parsent[i]))
 
-	export_color_map(neuron_parsent, input_file + "/color_map" + input_file)
+	#export_list2txt(sorted_list, input_file + "/sorted_ans" + input_file)
+
+	export_color_map(sorted_list, input_file + "/color_map" + input_file)
