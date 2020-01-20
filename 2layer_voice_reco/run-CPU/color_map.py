@@ -31,8 +31,7 @@ if __name__ == "__main__":
 	
 	sorted_list = []
 	
-	print(len(neuron_parsent))
-	#for i in range(len(neuron_parsent)):
-	#	sorted_list.append(label_sort(neuron_parsent[i]))
+	for i in range(len(neuron_parsent)):
+		sorted_list.append(label_sort(neuron_parsent[i]))
 
 	export_color_map(neuron_parsent, input_file + "/color_map" + input_file)
