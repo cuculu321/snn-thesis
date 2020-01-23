@@ -20,13 +20,22 @@ def export_color_map(double_list, output_path):
 
 if __name__ == "__main__":
 	from record_synapse import *
+	from label_sort import label_sort
 	import sys
+
+	from record_synapse import *
 
 	args = sys.argv
 	input_file = args[1]
 
-	neuron_parsent = import_synapse("end/" + str(input_file) + ".txt")
+	neuron_parsent = import_synapse(input_file + "/answer" + input_file + ".txt")
 	#synapse = import_synapse(input_synaps + "/end" + input_synaps +".txt")
+	
+	sorted_list = []
+	
+	for i in range(len(neuron_parsent)):
+		sorted_list.append(label_sort(neuron_parsent[i]))
 
+	#export_list2txt(sorted_list, input_file + "/sorted_ans" + input_file)
 
-	export_color_map(neuron_parsent, input_file)
+	export_color_map(sorted_list, input_file + "/color_map" + input_file)
