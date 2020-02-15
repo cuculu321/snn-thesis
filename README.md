@@ -2,15 +2,15 @@
 
 ## 目次
 ---
-1. [実行環境](https://github.com/cuculu321/snn-thesis/tree/make_readme#1-%E7%92%B0%E5%A2%83)
+1. [環境](https://github.com/cuculu321/snn-thesis/tree/make_readme#1-環境)
 
 1. [実行方法](https://github.com/cuculu321/snn-thesis/tree/make_readme#2-実行方法)
 
-1. 各フォルダについて
+1. [各フォルダについて](https://github.com/cuculu321/snn-thesis/tree/make_readme#3-各フォルダについて)
 
-1. 出力データについて
+1. [出力データについて](https://github.com/cuculu321/snn-thesis/tree/make_readme#4-出力データについて)
 
-1. 各プログラムの概要
+1. [各プログラムの概要](https://github.com/cuculu321/snn-thesis/tree/make_readme#5-各プログラムの概要)
 
 ## 1. 環境
 ---
