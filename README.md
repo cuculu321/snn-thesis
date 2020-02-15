@@ -12,6 +12,8 @@
 
 1. [各プログラムの概要](https://github.com/cuculu321/snn-thesis/tree/make_readme#5-各プログラムの概要)
 
+1. [現状の問題](https://github.com/cuculu321/snn-thesis/tree/make_readme#6-現状の問題)
+
 ## 1. 環境
 ---
 * python3
@@ -75,7 +77,45 @@ nohupコマンドについては[こちら](https://www.atmarkit.co.jp/ait/artic
 
 ## 5. 各プログラムの概要
 ---
-何をするのか、単体での実行方法があるものは実行方法と出力を書いていく。
+各コードの最終目的と単体での実行方法があるものは実行方法と出力を書いていく。
+
+## 5.1. 中核
+---
+### learning
+中心部分
+
+実行方法は2. 実行方法に記載済み
+
+
+### mapping
+興奮性ニューロンと、そのニューロンが示す音響特徴の対応づけ
+
+```
+pipenv run python run-CPU/mapping.py
+```
+出力：各単音節によって、どのニューロンが発火していたのかをプリント
+
+
+### third_layer
+コサイン類似度による分類
+
+* 学習(test)
+```
+pipenv run python run-CPU/third_layer.py -t 対象のフォルダ
+```
+入力：1-2synapse
+出力：2-3synapse
+
+* 精度の確認(check)
+```
+pipenv run python run-CPU/third_layer.py -c 対象のフォルダ
+```
+入力：1-2synapse、2-3synapse
+出力：end、answer
+
+
+## 5.2. その周り
+---
 
 ### color_map
 * カラーマップの生成・出力を行う
@@ -109,19 +149,6 @@ pipenv run python run-CPU/get_logmelspectrum.py
 ### label_sort
 単音節ラベルによるソート
 
-### learning
-中心部分
-
-実行方法は2. 実行方法に記載済み
-
-### mapping
-興奮性ニューロンと、そのニューロンが示す音響特徴の対応づけ
-
-```
-pipenv run python run-CPU/mapping.py
-```
-出力：各単音節によって、どのニューロンが発火していたのかをプリント
-
 ### neuron
 積分発火モデルのニューロンクラス
 
@@ -141,23 +168,6 @@ pipenv run python run-CPU/spike_train.py
 ```
 出力：女性音声1の単音節「が」の中心部分の特徴値から生成されたスパイク
 
-### third_layer
-コサイン類似度による分類
-
-* 学習(test)
-```
-pipenv run python run-CPU/third_layer.py -t 対象のフォルダ
-```
-入力：1-2synapse
-出力：2-3synapse
-
-* 精度の確認(check)
-```
-pipenv run python run-CPU/third_layer.py -c 対象のフォルダ
-```
-入力：1-2synapse、2-3synapse
-出力：end、answer
-
 ### var_th
 ニューロンの膜電位の設定
 
@@ -166,3 +176,8 @@ pipenv run python run-CPU/third_layer.py -c 対象のフォルダ
 
 * 静的分割：0.04s毎の分割
 * 動的分割：単音節を14分割
+
+## 6. 現状の問題
+---
+### プログラム的な問題
+learning.py単体で運用すると推論の部分でエラーが発生しますが、出力済みの1-2synapseからthird_layer.py -t および　-cを使えば動きます。
