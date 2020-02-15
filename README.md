@@ -2,9 +2,9 @@
 
 ## 目次
 ---
-1. 実行環境
+1. [実行環境](https://github.com/cuculu321/snn-thesis/tree/make_readme#1-%E7%92%B0%E5%A2%83)
 
-1. 実行方法
+1. [実行方法](https://github.com/cuculu321/snn-thesis/tree/make_readme#2-実行方法)
 
 1. 各フォルダについて
 
