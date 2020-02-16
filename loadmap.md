@@ -43,8 +43,31 @@ SNNについてのサーベイ論文。
 
 色々な知識
 
+### レートコーディング or テンポラルコーディング
+### おばあちゃん細胞表現 or 分散表現
+---
 ### [脳内情報表現に関する一般的な命題](https://www.jstage.jst.go.jp/article/jnns/9/1/9_1_16/_pdf)
 
+日本語の論文だが、論点が時折ずれていて読みづらいので用語の意味理解などにどうぞ
+
 ### [Philosophy of the Spike: Rate-Based vs. Spike-Based Theories of the Brain](https://www.frontiersin.org/articles/10.3389/fnsys.2015.00151/full)
-* レートコーディング or テンポラルコーディング
-* おばあちゃん細胞表現 or 分散表現
+
+レートコーディングとテンポラルコーディングの違いやお互いの利点がよくわかる論文
+
+### ニューロンモデル
+---
+### [Which Model to Use for Cortical Spiking Neurons?](https://www.izhikevich.org/publications/whichmod.pdf)
+
+様々なニューロンについて~~批判している~~述べている論文
+
+本論文で最良と言われているIzhikevich modelは、*作者の作ったモデル*なのでそういった意図がある論文とも言えるの参考程度に。
+
+### [これからスパイキングニューラルネットワークを始める人へ1 : ニューロンのモデルについて](http://nonatonic.hatenablog.com/entry/2017/11/25/005515)
+
+かなり簡単にニューロンモデルやSNNについてまとめられているブログ。ただ途中で筆を投げている。
+
+### [Pythonによるスパイキングニューラルネットワークの実装](http://narow613.hatenadiary.jp/entry/2018/07/29/181029)
+
+Izhikevich modelをpythonで実装している。
+
+うまく移植してください。
